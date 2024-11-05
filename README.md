@@ -20,7 +20,7 @@ To learn more about the techniques and methods we use to boost the rendering of 
 
 1. Clone the Diagram-Converter repository on your end
     ```console
-    git clone https://github.com/reactome-pwp/diagram-converter.git
+    git clone https://github.com/reactome/diagram-converter.git
     ```
  
 2. Navigate into diagram-converter
