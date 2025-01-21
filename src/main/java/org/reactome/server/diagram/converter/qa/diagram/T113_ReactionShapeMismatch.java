@@ -127,7 +127,8 @@ public class T113_ReactionShapeMismatch extends AbstractConverterQA implements D
                 "RETURN rle.dbId AS dbId, " +
                 "       CASE " +
                 "         WHEN (rle:BlackBoxEvent) THEN $omitted " +
-                "         WHEN ((rle:Polymerisation) OR (rle:Depolymerisation)) THEN $transition " +
+                "         WHEN (rle:Polymerisation) THEN $binding " +
+                "         WHEN (rle:Depolymerisation) THEN $dissociation " +
                 "         WHEN ((rle)-[:catalystActivity]->()) THEN $transition " +
                 "         WHEN d > 0 THEN CASE " +
                 "                           WHEN ((rle)-[:output]->(:Complex)) THEN $binding " +
