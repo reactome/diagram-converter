@@ -20,10 +20,10 @@ pipeline{
 
 	stages{
 		// This stage checks that upstream project 'GenerateGraphDatabaseAndAnalysisCore' was run successfully.
-		stage('Check Graph DB & Analysis Core build succeeded'){
+		stage('Check Graph DB build succeeded'){
 			steps{
 				script{
-                    utils.checkUpstreamBuildsSucceeded("GenerateGraphDatabaseAndAnalysisCore")
+                                    utils.checkUpstreamBuildsSucceeded("GenerateGraphDatabase")
 				}
 			}
 		}
