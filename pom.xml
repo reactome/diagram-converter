@@ -35,6 +35,8 @@
             <roles>
                 <role>alumni</role>
             </roles>
+            <organization>European Bioinformatics Institute</organization>
+            <organizationUrl>https://www.ebi.ac.uk/</organizationUrl>
         </developer>
 
         <developer>
@@ -43,6 +45,8 @@
             <roles>
                 <role>alumni</role>
             </roles>
+            <organization>European Bioinformatics Institute</organization>
+            <organizationUrl>https://www.ebi.ac.uk/</organizationUrl>
         </developer>
     </developers>
 
