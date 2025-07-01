@@ -20,7 +20,7 @@ import java.nio.file.Paths;
  * is only a symbolic link to the first one.
  * This functionality is used only when we create all diagrams (and graphs) during release.
  *
- * @author Antonio Fabregat <fabregat@ebi.ac.uk>
+ * @author Antonio Fabregat (fabregat@ebi.ac.uk)
  */
 public abstract class JsonWriter {
 

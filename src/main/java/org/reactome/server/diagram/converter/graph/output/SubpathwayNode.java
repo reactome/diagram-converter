@@ -5,7 +5,7 @@ import org.reactome.server.diagram.converter.graph.query.SubpathwaysQueryResult;
 import java.util.Collection;
 
 /**
- * @author Antonio Fabregat <fabregat@ebi.ac.uk>
+ * @author Antonio Fabregat (fabregat@ebi.ac.uk)
  */
 public class SubpathwayNode implements Comparable<SubpathwayNode> {
 

@@ -10,7 +10,7 @@ import java.util.Map;
  * Just a container in order to serialise an object containing a collection rather
  * than directly the collection
  *
- * @author Antonio Fabregat <fabregat@ebi.ac.uk>
+ * @author Antonio Fabregat (fabregat@ebi.ac.uk)
  */
 public class Graph {
 

@@ -17,27 +17,27 @@ import javax.xml.bind.annotation.XmlType;
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType>
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;choice maxOccurs="unbounded">
- *         &lt;element ref="{}org.gk.render.ProcessNode" minOccurs="0"/>
- *         &lt;element ref="{}org.gk.render.RenderableChemical" minOccurs="0"/>
- *         &lt;element ref="{}org.gk.render.RenderableChemicalDrug" minOccurs="0"/>
- *         &lt;element ref="{}org.gk.render.RenderableCompartment" minOccurs="0"/>
- *         &lt;element ref="{}org.gk.render.RenderableComplex" minOccurs="0"/>
- *         &lt;element ref="{}org.gk.render.RenderableEntity" minOccurs="0"/>
- *         &lt;element ref="{}org.gk.render.RenderableGene" minOccurs="0"/>
- *         &lt;element ref="{}org.gk.render.RenderableEntitySet" minOccurs="0"/>
- *         &lt;element ref="{}org.gk.render.RenderableProtein" minOccurs="0"/>
- *         &lt;element ref="{}org.gk.render.RenderableProteinDrug" minOccurs="0"/>
- *         &lt;element ref="{}org.gk.render.RenderableRNA" minOccurs="0"/>
- *         &lt;element ref="{}org.gk.render.RenderableRNADrug" minOccurs="0"/>
- *         &lt;element ref="{}org.gk.render.Note" minOccurs="0"/>
- *       &lt;/choice>
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
+ * &lt;complexType&gt;
+ *   &lt;complexContent&gt;
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *       &lt;choice maxOccurs="unbounded"&gt;
+ *         &lt;element ref="{}org.gk.render.ProcessNode" minOccurs="0"/&gt;
+ *         &lt;element ref="{}org.gk.render.RenderableChemical" minOccurs="0"/&gt;
+ *         &lt;element ref="{}org.gk.render.RenderableChemicalDrug" minOccurs="0"/&gt;
+ *         &lt;element ref="{}org.gk.render.RenderableCompartment" minOccurs="0"/&gt;
+ *         &lt;element ref="{}org.gk.render.RenderableComplex" minOccurs="0"/&gt;
+ *         &lt;element ref="{}org.gk.render.RenderableEntity" minOccurs="0"/&gt;
+ *         &lt;element ref="{}org.gk.render.RenderableGene" minOccurs="0"/&gt;
+ *         &lt;element ref="{}org.gk.render.RenderableEntitySet" minOccurs="0"/&gt;
+ *         &lt;element ref="{}org.gk.render.RenderableProtein" minOccurs="0"/&gt;
+ *         &lt;element ref="{}org.gk.render.RenderableProteinDrug" minOccurs="0"/&gt;
+ *         &lt;element ref="{}org.gk.render.RenderableRNA" minOccurs="0"/&gt;
+ *         &lt;element ref="{}org.gk.render.RenderableRNADrug" minOccurs="0"/&gt;
+ *         &lt;element ref="{}org.gk.render.Note" minOccurs="0"/&gt;
+ *       &lt;/choice&gt;
+ *     &lt;/restriction&gt;
+ *   &lt;/complexContent&gt;
+ * &lt;/complexType&gt;
  * </pre>
  * 
  * 

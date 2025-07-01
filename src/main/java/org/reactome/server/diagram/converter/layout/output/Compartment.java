@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 /**
- * @author Antonio Fabregat <fabregat@ebi.ac.uk>
+ * @author Antonio Fabregat (fabregat@ebi.ac.uk)
  */
 public class Compartment extends NodeCommon {
 

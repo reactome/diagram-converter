@@ -6,7 +6,7 @@ package org.reactome.server.diagram.converter.layout.shadows.partitioner;
  * So, instead of creating a List containing string arrays,
  * this helper class model a XYPoint properly.
  *
- * @author Guilherme S Viteri <gviteri@ebi.ac.uk>
+ * @author Guilherme S Viteri (gviteri@ebi.ac.uk)
  */
 public class XYPoint {
 

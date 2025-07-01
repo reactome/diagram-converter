@@ -9,7 +9,7 @@ import java.util.List;
  * These attributes will be used to get the available area inside the rectangle.
  * Once we get all intersections, we will be able to subtract them properly
  *
- * @author Guilherme S Viteri <gviteri@ebi.ac.uk>
+ * @author Guilherme S Viteri (gviteri@ebi.ac.uk)
  */
 public class ReactomeShadow extends Rectangle {
 

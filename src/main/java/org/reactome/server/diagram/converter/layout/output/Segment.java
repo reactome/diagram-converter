@@ -3,7 +3,7 @@ package org.reactome.server.diagram.converter.layout.output;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
- * @author Antonio Fabregat <fabregat@ebi.ac.uk>
+ * @author Antonio Fabregat (fabregat@ebi.ac.uk)
  */
 public class Segment {
 

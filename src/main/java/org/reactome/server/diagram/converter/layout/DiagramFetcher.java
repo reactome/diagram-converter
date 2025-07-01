@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Collection;
 
 /**
- * @author Antonio Fabregat <fabregat@ebi.ac.uk>
+ * @author Antonio Fabregat (fabregat@ebi.ac.uk)
  */
 public class DiagramFetcher {
 

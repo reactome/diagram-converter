@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Projecting PhysicalEntityNodes to GraphNodes
  *
- * @author Antonio Fabregat <fabregat@ebi.ac.uk>
+ * @author Antonio Fabregat (fabregat@ebi.ac.uk)
  */
 public class EntityNode extends GraphNode {
 

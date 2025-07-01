@@ -22,7 +22,7 @@ import java.util.*;
  * the underlying physical entities and their children. This information will be sent
  * to the client in a second batch so the graph can be kept
  *
- * @author Antonio Fabregat <fabregat@ebi.ac.uk>
+ * @author Antonio Fabregat (fabregat@ebi.ac.uk)
  */
 public class DiagramGraphFactory {
 

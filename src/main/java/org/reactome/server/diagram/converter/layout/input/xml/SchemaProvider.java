@@ -10,7 +10,7 @@ import java.net.URL;
 /**
  * Returns the schema from an xsd schema file
  *
- * @author Kostas Sidiropoulos <ksidiro@ebi.ac.uk>
+ * @author Kostas Sidiropoulos (ksidiro@ebi.ac.uk)
  */
 public abstract class SchemaProvider {
 

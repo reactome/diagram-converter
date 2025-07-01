@@ -4,7 +4,7 @@ import org.reactome.server.diagram.converter.graph.output.Graph;
 import org.reactome.server.diagram.converter.layout.output.Diagram;
 
 /**
- * @author Antonio Fabregat <fabregat@ebi.ac.uk>
+ * @author Antonio Fabregat (fabregat@ebi.ac.uk)
  */
 public interface PostQA {
 

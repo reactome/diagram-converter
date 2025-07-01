@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Calculates the points of the different shapes (circle, arrow, stop).
  *
- * @author Kostas Sidiropoulos <ksidiro@ebi.ac.uk>
+ * @author Kostas Sidiropoulos (ksidiro@ebi.ac.uk)
  */
 @SuppressWarnings("WeakerAccess")
 public abstract class ShapeBuilder {

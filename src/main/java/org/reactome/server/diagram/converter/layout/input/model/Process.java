@@ -11,33 +11,33 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for anonymous complex type.
+ * Java class for anonymous complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType>
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element ref="{}Properties"/>
- *         &lt;element ref="{}Nodes"/>
- *         &lt;element ref="{}Edges"/>
- *         &lt;element ref="{}Pathways"/>
- *         &lt;element ref="{}normalComponents" minOccurs="0"/>
- *         &lt;element ref="{}diseaseComponents" minOccurs="0"/>
- *         &lt;element ref="{}crossedComponents" minOccurs="0"/>
- *         &lt;element ref="{}overlaidComponents" minOccurs="0"/>
- *         &lt;element ref="{}lofNodes" minOccurs="0"/>
- *       &lt;/sequence>
- *       &lt;attribute name="hideCompartmentInName" type="{http://www.w3.org/2001/XMLSchema}boolean" />
- *       &lt;attribute name="nextId" type="{http://www.w3.org/2001/XMLSchema}integer" />
- *       &lt;attribute name="reactomeDiagramId" use="required" type="{http://www.w3.org/2001/XMLSchema}integer" />
- *       &lt;attribute name="isDisease" type="{http://www.w3.org/2001/XMLSchema}boolean" />
- *       &lt;attribute name="forNormalDraw" type="{http://www.w3.org/2001/XMLSchema}boolean" />
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
+ * &lt;complexType&gt;
+ *   &lt;complexContent&gt;
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *       &lt;sequence&gt;
+ *         &lt;element ref="{}Properties"/&gt;
+ *         &lt;element ref="{}Nodes"/&gt;
+ *         &lt;element ref="{}Edges"/&gt;
+ *         &lt;element ref="{}Pathways"/&gt;
+ *         &lt;element ref="{}normalComponents" minOccurs="0"/&gt;
+ *         &lt;element ref="{}diseaseComponents" minOccurs="0"/&gt;
+ *         &lt;element ref="{}crossedComponents" minOccurs="0"/&gt;
+ *         &lt;element ref="{}overlaidComponents" minOccurs="0"/&gt;
+ *         &lt;element ref="{}lofNodes" minOccurs="0"/&gt;
+ *       &lt;/sequence&gt;
+ *       &lt;attribute name="hideCompartmentInName" type="{http://www.w3.org/2001/XMLSchema}boolean" /&gt;
+ *       &lt;attribute name="nextId" type="{http://www.w3.org/2001/XMLSchema}integer" /&gt;
+ *       &lt;attribute name="reactomeDiagramId" use="required" type="{http://www.w3.org/2001/XMLSchema}integer" /&gt;
+ *       &lt;attribute name="isDisease" type="{http://www.w3.org/2001/XMLSchema}boolean" /&gt;
+ *       &lt;attribute name="forNormalDraw" type="{http://www.w3.org/2001/XMLSchema}boolean" /&gt;
+ *     &lt;/restriction&gt;
+ *   &lt;/complexContent&gt;
+ * &lt;/complexType&gt;
  * </pre>
  * 
  * 

@@ -14,8 +14,8 @@ import java.util.List;
 
 
 /**
- * @author Antonio Fabregat <fabregat@ebi.ac.uk>
- * @author Guilherme Viteri <gviteri@ebi.ac.uk>
+ * @author Antonio Fabregat (fabregat@ebi.ac.uk)
+ * @author Guilherme Viteri (gviteri@ebi.ac.uk)
  */
 public class ShadowsUtil {
 

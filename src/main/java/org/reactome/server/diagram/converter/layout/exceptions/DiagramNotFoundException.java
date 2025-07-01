@@ -1,7 +1,7 @@
 package org.reactome.server.diagram.converter.layout.exceptions;
 
 /**
- * @author Antonio Fabregat <fabregat@ebi.ac.uk>
+ * @author Antonio Fabregat (fabregat@ebi.ac.uk)
  */
 public class DiagramNotFoundException extends Exception {
 

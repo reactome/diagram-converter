@@ -3,7 +3,7 @@ package org.reactome.server.diagram.converter.graph.output;
 import org.reactome.server.diagram.converter.graph.query.QueryResult;
 
 /**
- * @author Antonio Fabregat <fabregat@ebi.ac.uk>
+ * @author Antonio Fabregat (fabregat@ebi.ac.uk)
  */
 public class GraphNode {
 

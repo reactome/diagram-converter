@@ -5,7 +5,7 @@ import org.reactome.server.diagram.converter.layout.util.ShapeBuilder;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * @author Antonio Fabregat <fabregat@ebi.ac.uk>
+ * @author Antonio Fabregat (fabregat@ebi.ac.uk)
  */
 @XmlRootElement
 public class SummaryItem {

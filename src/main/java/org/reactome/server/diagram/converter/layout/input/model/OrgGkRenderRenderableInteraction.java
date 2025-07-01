@@ -15,33 +15,33 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 
 /**
- * <p>Java class for anonymous complex type.
+ * Java class for anonymous complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType>
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element ref="{}Inputs" minOccurs="0"/>
- *         &lt;element ref="{}Outputs" minOccurs="0"/>
- *         &lt;element ref="{}Catalysts" minOccurs="0"/>
- *         &lt;element ref="{}Inhibitors" minOccurs="0"/>
- *         &lt;element ref="{}Activators" minOccurs="0"/>
- *         &lt;element ref="{}Properties" minOccurs="0"/>
- *       &lt;/sequence>
- *       &lt;attribute name="id" use="required" type="{http://www.w3.org/2001/XMLSchema}integer" />
- *       &lt;attribute name="lineWidth" type="{http://www.w3.org/2001/XMLSchema}decimal" />
- *       &lt;attribute name="lineColor" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
- *       &lt;attribute name="points" use="required" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
- *       &lt;attribute name="position" use="required" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
- *       &lt;attribute name="interactionType" use="required" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
- *       &lt;attribute name="reactomeId" type="{http://www.w3.org/2001/XMLSchema}integer" />
- *       &lt;attribute name="schemaClass" type="{http://www.w3.org/2001/XMLSchema}NCName" />
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
+ * &lt;complexType&gt;
+ *   &lt;complexContent&gt;
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *       &lt;sequence&gt;
+ *         &lt;element ref="{}Inputs" minOccurs="0"/&gt;
+ *         &lt;element ref="{}Outputs" minOccurs="0"/&gt;
+ *         &lt;element ref="{}Catalysts" minOccurs="0"/&gt;
+ *         &lt;element ref="{}Inhibitors" minOccurs="0"/&gt;
+ *         &lt;element ref="{}Activators" minOccurs="0"/&gt;
+ *         &lt;element ref="{}Properties" minOccurs="0"/&gt;
+ *       &lt;/sequence&gt;
+ *       &lt;attribute name="id" use="required" type="{http://www.w3.org/2001/XMLSchema}integer" /&gt;
+ *       &lt;attribute name="lineWidth" type="{http://www.w3.org/2001/XMLSchema}decimal" /&gt;
+ *       &lt;attribute name="lineColor" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" /&gt;
+ *       &lt;attribute name="points" use="required" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" /&gt;
+ *       &lt;attribute name="position" use="required" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" /&gt;
+ *       &lt;attribute name="interactionType" use="required" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" /&gt;
+ *       &lt;attribute name="reactomeId" type="{http://www.w3.org/2001/XMLSchema}integer" /&gt;
+ *       &lt;attribute name="schemaClass" type="{http://www.w3.org/2001/XMLSchema}NCName" /&gt;
+ *     &lt;/restriction&gt;
+ *   &lt;/complexContent&gt;
+ * &lt;/complexType&gt;
  * </pre>
  * 
  * 

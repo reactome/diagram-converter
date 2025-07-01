@@ -13,8 +13,8 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 /**
- * @author Kostas Sidiropoulos <ksidiro@ebi.ac.uk>
- * @author Antonio Fabregat <fabregat@ebi.ac.uk>
+ * @author Kostas Sidiropoulos (ksidiro@ebi.ac.uk)
+ * @author Antonio Fabregat (fabregat@ebi.ac.uk)
  */
 public class Diagram {
     private static Logger logger = LoggerFactory.getLogger("converter");

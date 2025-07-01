@@ -6,7 +6,7 @@ import org.reactome.server.diagram.converter.layout.output.DiagramObject;
 import java.util.regex.Pattern;
 
 /**
- * @author Kostas Sidiropoulos <ksidiro@ebi.ac.uk>
+ * @author Kostas Sidiropoulos (ksidiro@ebi.ac.uk)
  */
 public abstract class Beautifier {
 
