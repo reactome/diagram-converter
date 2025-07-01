@@ -31,7 +31,8 @@ public class ObjectFactory {
     private final static QName _LofNodes_QNAME = new QName("", "lofNodes");
 
     /**
-     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.reactome.server.diagram.converter.layout.input.model
+     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package:
+     * org.reactome.server.diagram.converter.layout.input.model
      * 
      */
     public ObjectFactory() {
@@ -203,6 +204,14 @@ public class ObjectFactory {
      */
     public OrgGkRenderRenderableProtein createOrgGkRenderRenderableProtein() {
         return new OrgGkRenderRenderableProtein();
+    }
+
+    /**
+     * Create an instance of {@link OrgGkRenderRenderableCell }
+     *
+     */
+    public OrgGkRenderRenderableCell createOrgGkRenderRenderableCell() {
+        return new OrgGkRenderRenderableCell();
     }
 
     /**

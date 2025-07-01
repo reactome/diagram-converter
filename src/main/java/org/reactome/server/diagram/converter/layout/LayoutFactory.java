@@ -131,9 +131,19 @@ public abstract class LayoutFactory {
                     } catch (RuntimeException e) {
                         try {
                             Long id = ((BigInteger) inputNode.getClass().getMethod("getReactomeId").invoke(inputNode)).longValue();
-                            T111_UnrecognisedRenderableClass.add(outputDiagram.getStableId(), outputDiagram.getDisplayName(), id, clazz.getSimpleName());
+                            T111_UnrecognisedRenderableClass.add(
+                                    outputDiagram.getStableId(),
+                                    outputDiagram.getDisplayName(),
+                                    id,
+                                    clazz.getSimpleName()
+                            );
                         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e1) {
-                            logger.error(String.format("[%s ] contains a not recognised NODE type - '%s' [%s]", outputDiagram.getStableId(), clazz.getName(), clazz.getSimpleName()));
+                            logger.error(
+                                    "[{}] contains a not recognised NODE type - '{}' [{}]",
+                                    outputDiagram.getStableId(),
+                                    clazz.getName(),
+                                    clazz.getSimpleName()
+                            );
                         }
 
                     }
@@ -187,7 +197,12 @@ public abstract class LayoutFactory {
                         clazz.equals(OrgGkRenderRenderableInteraction.class)) {
                     rtn.add(new Link(item));
                 } else {
-                    logger.warn(String.format("[%s] contains a not recognised EDGE type - '%s' [%s]", outputDiagram.getStableId(), clazz.getName(), clazz.getSimpleName()));
+                    logger.warn(
+                            "[{}] contains a not recognised EDGE type - '{}' [{}]",
+                            outputDiagram.getStableId(),
+                            clazz.getName(),
+                            clazz.getSimpleName()
+                    );
                 }
             }
         }
@@ -279,11 +294,11 @@ public abstract class LayoutFactory {
         return outputList;
     }
 
-    private static String getSpeciesName(GKInstance pathway){
+    private static String getSpeciesName(GKInstance pathway) {
         try {
-            if(pathway.getSchemClass().isValidAttribute(ReactomeJavaConstants.species)) {
+            if (pathway.getSchemClass().isValidAttribute(ReactomeJavaConstants.species)) {
                 List speciess = pathway.getAttributeValuesList(ReactomeJavaConstants.species);
-                if(speciess != null && !speciess.isEmpty()){
+                if (speciess != null && !speciess.isEmpty()) {
                     GKInstance species = (GKInstance) speciess.get(0);
                     return species.getDisplayName();
                 }

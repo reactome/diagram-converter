@@ -68,7 +68,8 @@ public class T701_ReactionParticipantsMismatch extends AbstractConverterQA imple
         }
     }
 
-    private void check(Diagram diagram, Graph graph, EventNode reaction, List<Long> graphParticipants, List<ReactionPart> diagramParticipants, String role) {
+    private void check(Diagram diagram, Graph graph, EventNode reaction, List<Long> graphParticipants,
+                       List<ReactionPart> diagramParticipants, String role) {
         if (diagramParticipants != null && graphParticipants != null) { // The "else" is reported in another test!
             for (Long graphParticipant : graphParticipants) {
                 boolean found = false;

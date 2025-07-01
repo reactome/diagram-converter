@@ -68,7 +68,7 @@ public abstract class FileUtil {
         logger.info(folderName + " is a valid directory name");
 
         if (folderName.endsWith(File.separator)) {
-            return folderName.substring(0, folderName.length() - 2);
+            return folderName.substring(0, folderName.length() - 1);
         } else {
             return folderName;
         }

@@ -94,11 +94,12 @@ public class T116_StoichiometryMismatch extends AbstractConverterQA implements D
         Map<Long, Map<Connector.Type, Map<Long, Integer>>> map = new HashMap<>();
         try {
             String query = "" +
-                    "MATCH path=(p:Pathway{stId:{stId}})-[:hasEvent*]->(rle:ReactionLikeEvent) " +
+                    "MATCH path=(p:Pathway{stId:$stId})-[:hasEvent*]->(rle:ReactionLikeEvent) " +
                     "WHERE SINGLE(x IN NODES(path) WHERE (x:Pathway) AND x.hasDiagram) " +
                     "WITH DISTINCT rle " +
-                    "MATCH part=(rle)-[:input|output]->(pe:PhysicalEntity) " +
-                    "RETURN DISTINCT NODES(part), RELATIONSHIPS(part)";
+                    "MATCH part=(rle)-[s:input|output]->(pe:PhysicalEntity) " +
+                    "RETURN DISTINCT rle, collect(s), collect(pe)";
+
             Map<String, Object> params = new HashMap<>();
             params.put("stId", diagram.getStableId());
             for (ReactionLikeEvent rle : ados.getCustomQueryResults(ReactionLikeEvent.class, query, params)) {

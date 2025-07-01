@@ -16,7 +16,7 @@ import org.reactome.server.diagram.converter.qa.QATests;
 import org.reactome.server.diagram.converter.qa.conversion.T001_FailedPathways;
 import org.reactome.server.diagram.converter.tasks.ConverterTasks;
 import org.reactome.server.diagram.converter.utils.ProgressBar;
-import org.reactome.server.graph.domain.model.Pathway;
+import org.reactome.server.graph.domain.result.SimpleDatabaseObject;
 import org.reactome.server.graph.service.GeneralService;
 import org.reactome.server.graph.utils.ReactomeGraphCore;
 import org.slf4j.Logger;
@@ -36,7 +36,7 @@ class Converter {
 
     private static final Logger logger = LoggerFactory.getLogger("converter");
 
-    private static NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+    private static final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
 
     private static DiagramFetcher diagramFetcher;
     private static DiagramGraphFactory graphFactory;
@@ -44,24 +44,25 @@ class Converter {
 
     private static TrivialChemicals trivialChemicals;
 
-    static void run(Collection<Pathway> pathways, MySQLAdaptor dba, String output) {
+    static void run(Collection<SimpleDatabaseObject> pathways, MySQLAdaptor dba, String output) {
         outputCheck(output);
         diagramFetcher = new DiagramFetcher(dba);
         graphFactory = new DiagramGraphFactory();
         processFactory = new ProcessFactory("/process_schema.xsd");
         trivialChemicals = new TrivialChemicals();
 
-        Long start = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
         ConverterTasks.runInitialTasks();
         int i = 0; int tot = pathways.size();
         int version = ReactomeGraphCore.getService(GeneralService.class).getDBInfo().getVersion();
 
-        System.out.println(String.format("\r· Diagram converter for version %d started:\n\t> Targeting %s pathways.\n", version, numberFormat.format(tot)));
-        for (Pathway pathway : pathways) {
+        System.out.printf("\r· Diagram converter for version %d started:\n\t> Targeting %s pathways.\n%n", version, numberFormat.format(tot));
+        for (SimpleDatabaseObject pathway : pathways) {
             ProgressBar.updateProgressBar(pathway.getStId(), i++, tot);
             try {
                 if (!convert(pathway, output)) T001_FailedPathways.add(pathway);
             } catch (Exception e) {
+                e.printStackTrace();
                 logger.error("Failed to convert pathway " + pathway.getStId(), e);
                 T001_FailedPathways.add(pathway, e.getMessage());
             }
@@ -72,10 +73,10 @@ class Converter {
 
         QATests.writeReports();
         String conv = numberFormat.format(tot - T001_FailedPathways.size());
-        System.out.println(String.format("· Conversion finished: %s pathway diagrams have been successfully converted (%s)\n", conv, getTimeFormatted(time)));
+        System.out.printf("· Conversion finished: %s pathway diagrams have been successfully converted (%s)\n%n", conv, getTimeFormatted(time));
     }
 
-    private static boolean convert(Pathway pathway, String outputDir) throws DiagramNotFoundException {
+    private static boolean convert(SimpleDatabaseObject pathway, String outputDir) throws DiagramNotFoundException {
         Diagram diagram = getDiagram(diagramFetcher.getInstance(pathway.getDbId() + ""));
         if (diagram == null) return false;
 

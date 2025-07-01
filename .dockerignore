@@ -1,0 +1,9 @@
+.git
+.github
+doc
+
+.dockerignore
+.gitignore
+Dockerfile
+Jenkinsfile
+README.md

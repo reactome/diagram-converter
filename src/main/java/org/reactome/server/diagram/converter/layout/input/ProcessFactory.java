@@ -39,15 +39,18 @@ public class ProcessFactory {
         }
     }
 
-    public Process createProcess(String xmlContent, String stId){
+    public Process createProcess(String xmlContent, String stId) {
         Process process = null;
         try {
             process = deserializeXML(xmlContent);
 
             //Check for events during deserialization
             if (!xmlValidationEventHandler.getEvents().isEmpty()) {
-                logger.error(String.format("[%s] Error(s) in XML deserialisation of [%s]: ", stId, process.getProperties().getIsChangedOrDisplayName().get(0)));
-                logger.error(String.format(" >> %s <<", xmlValidationEventHandler.getEvents()));
+                logger.error(
+                        "[{}] Error(s) in XML deserialisation of [{}]: ",
+                        stId, process.getProperties().getIsChangedOrDisplayName().get(0)
+                );
+                logger.error(" >> {} <<", xmlValidationEventHandler.getEvents());
             }
         } catch (JAXBException e) {
             logger.error("Error creating Process:", e);

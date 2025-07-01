@@ -21,7 +21,8 @@ public class T108_IsolatedGlyphs extends AbstractConverterQA implements DiagramQ
 
     @Override
     public String getDescription() {
-        return "Iterates over all Edges and Links and identifies the isolated glyphs. The method can also apply a fix by removing this glyph from the list of Nodes.";
+        return "Iterates over all Edges and Links and identifies the isolated glyphs. " +
+                "The method can also apply a fix by removing this glyph from the list of Nodes.";
     }
 
     @Override

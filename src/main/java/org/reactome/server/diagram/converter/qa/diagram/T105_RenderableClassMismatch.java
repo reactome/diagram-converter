@@ -38,7 +38,8 @@ public class T105_RenderableClassMismatch extends AbstractConverterQA implements
         return getReport(lines);
     }
 
-    public static void add(String diagramStId, String diagramName, Long entityId, String schemaClass, String entityName,String wrongRC, String rightRC){
+    public static void add(String diagramStId, String diagramName, Long entityId, String schemaClass, String entityName,
+                           String wrongRC, String rightRC) {
         lines.add(String.format("%s,\"%s\",%d,%s,\"%s\",%s,%s,%s",
                 diagramStId,
                 diagramName,

@@ -5,7 +5,6 @@ import org.xml.sax.SAXException;
 import javax.xml.XMLConstants;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import java.io.File;
 import java.net.URL;
 
 /**
@@ -18,11 +17,12 @@ public abstract class SchemaProvider {
     public static Schema getSchema(String schemaLocation) throws SAXException {
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Schema schema = null;
-            ClassLoader classLoader = SchemaProvider.class.getClassLoader();
-            URL url = classLoader.getResource(schemaLocation);
-            if(url!=null) {
-                schema = sf.newSchema(new File(url.getFile()));
-            }
+
+        ClassLoader classLoader = SchemaProvider.class.getClassLoader();
+        URL url = classLoader.getResource(schemaLocation);
+        if (url != null) {
+            schema = sf.newSchema(url);
+        }
         return schema;
     }
 }

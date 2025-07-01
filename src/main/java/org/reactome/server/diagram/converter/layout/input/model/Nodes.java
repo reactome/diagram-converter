@@ -59,6 +59,7 @@ public class Nodes {
         @XmlElement(name = "org.gk.render.RenderableGene", type = OrgGkRenderRenderableGene.class),
         @XmlElement(name = "org.gk.render.RenderableEntitySet", type = OrgGkRenderRenderableEntitySet.class),
         @XmlElement(name = "org.gk.render.RenderableProtein", type = OrgGkRenderRenderableProtein.class),
+        @XmlElement(name = "org.gk.render.RenderableCell", type = OrgGkRenderRenderableCell.class),
         @XmlElement(name = "org.gk.render.RenderableProteinDrug", type = OrgGkRenderRenderableProteinDrug.class),
         @XmlElement(name = "org.gk.render.RenderableRNA", type = OrgGkRenderRenderableRNA.class),
         @XmlElement(name = "org.gk.render.RenderableRNADrug", type = OrgGkRenderRenderableRNADrug.class),
@@ -73,7 +74,8 @@ public class Nodes {
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the orgGkRenderProcessNodeOrOrgGkRenderRenderableChemicalOrOrgGkRenderRenderableChemicalDrug property.
+     * This is why there is not a <CODE>set</CODE> method for the
+     * orgGkRenderProcessNodeOrOrgGkRenderRenderableChemicalOrOrgGkRenderRenderableChemicalDrug property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
@@ -93,6 +95,7 @@ public class Nodes {
      * {@link OrgGkRenderRenderableGene }
      * {@link OrgGkRenderRenderableEntitySet }
      * {@link OrgGkRenderRenderableProtein }
+     * {@link OrgGkRenderRenderableCell }
      * {@link OrgGkRenderRenderableProteinDrug }
      * {@link OrgGkRenderRenderableRNA }
      * {@link OrgGkRenderRenderableRNADrug }

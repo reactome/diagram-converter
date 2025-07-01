@@ -1,5 +1,7 @@
 package org.reactome.server.diagram.converter.graph.query;
 
+import org.neo4j.driver.Value;
+
 @SuppressWarnings("unused")
 public class RegulationQueryResult {
 
@@ -14,4 +16,18 @@ public class RegulationQueryResult {
         return type;
     }
 
+    public void setDbId(Long dbId) {
+        this.dbId = dbId;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public static RegulationQueryResult build(Value v) {
+        RegulationQueryResult regulationQueryResult = new RegulationQueryResult();
+        regulationQueryResult.setDbId(v.get("dbId").asLong());
+        regulationQueryResult.setType(v.get("type").asString(null));
+        return regulationQueryResult;
+    }
 }

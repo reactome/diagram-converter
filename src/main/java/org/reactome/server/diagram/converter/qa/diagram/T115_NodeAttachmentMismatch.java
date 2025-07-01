@@ -104,12 +104,12 @@ public class T115_NodeAttachmentMismatch extends AbstractConverterQA implements 
         Map<Long, EntityWithAccessionedSequence> rtn = new HashMap<>();
         try {
             String query = "" +
-                    "MATCH path=(p:Pathway{stId:{stId}})-[:hasEvent*]->(rle:ReactionLikeEvent) " +
+                    "MATCH path=(p:Pathway{stId:$stId})-[:hasEvent*]->(rle:ReactionLikeEvent) " +
                     "WHERE SINGLE(x IN NODES(path) WHERE (x:Pathway) AND x.hasDiagram) " +
                     "MATCH (rle)-[:input|output|catalystActivity|physicalEntity|regulatedBy|regulator*]->(pe:EntityWithAccessionedSequence) " +
                     "WITH DISTINCT pe " +
                     "MATCH (pe)-[hm:hasModifiedResidue]->(tm:TranslationalModification) " +
-                    "RETURN DISTINCT pe, hm, tm ";
+                    "RETURN DISTINCT pe, collect(hm), collect(tm) ";
             Map<String, Object> params = new HashMap<>();
             params.put("stId", diagram.getStableId());
             Collection<EntityWithAccessionedSequence> ewass = ados.getCustomQueryResults(EntityWithAccessionedSequence.class, query, params);

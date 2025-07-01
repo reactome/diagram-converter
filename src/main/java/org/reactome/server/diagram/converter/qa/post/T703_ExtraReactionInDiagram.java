@@ -22,7 +22,8 @@ public class T703_ExtraReactionInDiagram extends AbstractConverterQA implements 
 
     @Override
     public String getDescription() {
-        return "Reactions seen in a diagram that shouldn't be there. Mainly the reason is because the reaction belongs to a subpathway that also has its own diagram";
+        return "Reactions seen in a diagram that shouldn't be there. " +
+                "Mainly the reason is because the reaction belongs to a subpathway that also has its own diagram";
     }
 
     @Override

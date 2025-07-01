@@ -112,7 +112,7 @@ public class EdgeCommon extends DiagramObject {
         this.maxY = Collections.max(yy);
     }
 
-    private void setReactionShape() {
+    protected void setReactionShape() {
         if (reactionType == null) {
             // If no type specified then
             // DRAW BOX

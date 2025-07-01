@@ -200,8 +200,12 @@ public class Node extends NodeCommon {
     }
 
     public void setSummaryItems() {
-        if (this.renderableClass.equals("Protein") || this.renderableClass.equals("Chemical")) {
-            this.interactorsSummary = new SummaryItem(SummaryItem.Type.TR, this);
+        switch (this.renderableClass) {
+            case "Protein":
+            case "Chemical":
+            case "Complex":
+                this.interactorsSummary = new SummaryItem(SummaryItem.Type.TR, this);
+                break;
         }
     }
 

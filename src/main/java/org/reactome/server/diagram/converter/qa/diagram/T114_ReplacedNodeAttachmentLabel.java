@@ -56,7 +56,7 @@ public class T114_ReplacedNodeAttachmentLabel extends AbstractConverterQA implem
             if (node.nodeAttachments != null) {
                 for (NodeAttachment attach : node.nodeAttachments) {
                     if (attach.reactomeId != null) {
-                        AbstractModifiedResidue tm = dos.findById(attach.reactomeId);
+                        AbstractModifiedResidue tm = dos.findByIdNoRelations(attach.reactomeId);
                         if (tm != null) {
                             attach.description = tm.getDisplayName();
                             String label = tm.fetchSingleValue("getLabel");

@@ -3,7 +3,7 @@ package org.reactome.server.diagram.converter.qa.conversion;
 import org.reactome.server.diagram.converter.qa.common.AbstractConverterQA;
 import org.reactome.server.diagram.converter.qa.common.QAPriority;
 import org.reactome.server.diagram.converter.qa.common.annotation.ConverterReport;
-import org.reactome.server.graph.domain.model.Pathway;
+import org.reactome.server.graph.domain.result.SimpleDatabaseObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,10 +33,10 @@ public class T001_FailedPathways extends AbstractConverterQA {
         return getReport(lines);
     }
 
-    public static void add(Pathway p){
+    public static void add(SimpleDatabaseObject p){
         add(p, "Unknown reason");
     }
-    public static void add(Pathway p, String msg){
+    public static void add(SimpleDatabaseObject p, String msg){
         lines.add(String.format("%s,\"%s\",\"%s\"", p.getStId(), p.getDisplayName(), msg));
     }
 

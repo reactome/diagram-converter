@@ -266,6 +266,25 @@
             <xs:attribute name="needDashedBorder" use="optional" type="xs:boolean"/>
         </xs:complexType>
     </xs:element>
+    <xs:element name="org.gk.render.RenderableCell">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="Properties"/>
+                <xs:element minOccurs="0" ref="NodeAttachments"/>
+            </xs:sequence>
+            <xs:attribute name="bounds" use="required"/>
+            <xs:attribute name="bgColor" use="optional"/>
+            <xs:attribute name="fgColor" use="optional"/>
+            <xs:attribute name="lineColor" use="optional"/>
+            <xs:attribute name="lineWidth" use="optional" type="xs:decimal"/>
+            <xs:attribute name="id" use="required" type="xs:integer"/>
+            <xs:attribute name="position" use="required"/>
+            <xs:attribute name="reactomeId" use="required" type="xs:integer"/>
+            <xs:attribute name="schemaClass" use="required" type="xs:NCName"/>
+            <xs:attribute name="textPosition" use="optional"/>
+            <xs:attribute name="needDashedBorder" use="optional" type="xs:boolean"/>
+        </xs:complexType>
+    </xs:element>
     <xs:element name="org.gk.render.RenderableProteinDrug">
         <xs:complexType>
             <xs:sequence>

@@ -18,6 +18,7 @@ public class EntityNode extends GraphNode {
     //Next variable will NOT contain value for Complexes and EntitySets because they
     //do not have main resources (members or components are treated separately).
     public String identifier = null;
+    public String referenceType = null;
     public List<String> geneNames = null;
 
     public List<Long> parents = null;
@@ -32,7 +33,7 @@ public class EntityNode extends GraphNode {
     public EntityNode(NodesQueryResult node, List<Long> diagramIds){
         super(node);
         this.diagramIds = diagramIds;
-
+        this.referenceType = node.getReferenceType();
         this.identifier = node.getIdentifier();
         this.geneNames = node.getGeneNames();
         this.children = node.getChildren();

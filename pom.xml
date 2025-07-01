@@ -6,10 +6,17 @@
 
     <groupId>org.reactome.server.diagram</groupId>
     <artifactId>diagram-converter</artifactId>
-    <version>2.0.0</version>
+    <version>3.1.0</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
+
+    <parent>
+        <groupId>org.reactome.maven</groupId>
+        <artifactId>reactome-parent</artifactId>
+        <version>1.0.5</version>
+    </parent>
+
     <description>
         A collection of server-side tools, mainly focusing on the generation of a set of JSON files to be
         consumed by the Pathway Diagram Viewer v3.0
@@ -57,26 +64,13 @@
     </scm>
 
     <properties>
-        <!-- dependencies -->
-        <jsap.version>2.1</jsap.version>
-        <jdom.version>1.1.3</jdom.version>
-        <junit.version>4.12</junit.version>
-        <reactome.base.version>2.1.0-SNAPSHOT</reactome.base.version>
-        <reactome.graph.core.version>1.1.26-SNAPSHOT</reactome.graph.core.version>
-
-        <!-- build -->
-        <jdk.version>1.8</jdk.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <main.class>org.reactome.server.diagram.converter.Main</main.class>
 
         <!-- maven build and plugins -->
-        <maven.assembly.version>2.6</maven.assembly.version>
-        <maven.compiler.version>3.5.1</maven.compiler.version>
         <maven.gpg.version>1.5</maven.gpg.version>
         <maven.jar.version>2.6</maven.jar.version>
         <maven.javadoc.version>2.10.3</maven.javadoc.version>
         <maven.release.version>2.5.3</maven.release.version>
-        <maven.resources.version>3.0.1</maven.resources.version>
-        <maven.source.version>2.4</maven.source.version>
         <nexus-staging-maven-plugin>1.6.7</nexus-staging-maven-plugin>
     </properties>
 
@@ -85,14 +79,11 @@
         <dependency>
             <groupId>org.reactome.server.graph</groupId>
             <artifactId>graph-core</artifactId>
-            <version>${reactome.graph.core.version}</version>
         </dependency>
-
-        <!-- Reactome-base for MySQL Adapter -->
+        <!--Reactome-base for MYSQL Adapter-->
         <dependency>
             <groupId>org.reactome.base</groupId>
             <artifactId>reactome-base</artifactId>
-            <version>${reactome.base.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-httpclient</groupId>
@@ -101,25 +92,36 @@
             </exclusions>
         </dependency>
 
-        <!-- JSAP console reader -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <!--JSAP console reader-->
         <dependency>
             <groupId>com.martiansoftware</groupId>
             <artifactId>jsap</artifactId>
-            <version>${jsap.version}</version>
         </dependency>
-
-        <!-- JUnit -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-
         <dependency>
             <groupId>org.jdom</groupId>
             <artifactId>jdom</artifactId>
-            <version>${jdom.version}</version>
+        </dependency>
+
+        <!-- Open JDK remove javax.xml.bind -->
+        <dependency>
+            <groupId>com.sun.activation</groupId>
+            <artifactId>javax.activation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
         </dependency>
     </dependencies>
 
@@ -152,8 +154,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven.compiler.version}</version>
                 <configuration>
-                    <source>${jdk.version}</source>
-                    <target>${jdk.version}</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
             </plugin>
 
@@ -162,13 +164,29 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>${maven.jar.version}</version>
-                <configuration>
-                    <excludes>
-                        <exclude>**/logback.xml</exclude>
-                    </excludes>
-                </configuration>
+                <executions>
+                    <execution>
+                        <id>default-jar</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <excludes>
+                                <exclude>**/logback.xml</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>exec-jar</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>exec</classifier>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
-
             <!-- Generate jar with dependencies -->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -193,6 +211,25 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
+                <configuration>
+                    <fork>true</fork>
+                    <mainClass>${main.class}</mainClass>
+                    <classifier>exec</classifier>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
 
             <!-- Nexus staging plugin for Sonatype deployment -->
             <plugin>
@@ -263,6 +300,34 @@
                     <useReleaseProfile>false</useReleaseProfile>
                     <releaseProfiles>release</releaseProfiles>
                     <goals>deploy</goals>
+                </configuration>
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.1.1</version>
+                <dependencies>
+                    <!-- This dependency allows Checkstyle to understand Java 11 syntax -->
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>8.44</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>checkstyle-check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <configLocation>checkstyle.xml</configLocation>
+                    <!-- Optional: Set encoding -->
+                    <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
 

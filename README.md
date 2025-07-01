@@ -32,15 +32,14 @@ To learn more about the techniques and methods we use to boost the rendering of 
   
 4. Diagram-core Help: --help 
     ```console
-    java -jar target/diagram-converter-jar-with-dependencies.jar --help  
+    java -jar target/diagram-converter-exec.jar --help  
     ```
 
 5. Convert all pathway diagrams (ensure special characters are escaped)
 
         ```console
-        java -jar target/diagram-converter-jar-with-dependencies.jar
-             -a graph_db_host
-             -b graph_db_port
+        java -jar target/diagram-converter-exec.jar
+             -a graph_db_bolt_url
              -c graph_db_user
              -d graph_db_password
              
@@ -59,6 +58,9 @@ Using the -t switch, the user can specify a target species or a list of diagrams
 - Example:
   - -t:"Homo sapiens"
   - -t:R-HSA-5654738,R-HSA-5655291,R-HSA-2219530,R-HSA-5637815 
+
+#### Omitting logs
+To omit logs use this VM Argument `-Dlogback.configurationFile=src/main/resources/logback.xml` 
 
 ##### Important
 In case of connection to a remote server via ssh there might be a "No X11 DISPLAY variable was set" error. Then try unsetting the DISPLAY using the following command:

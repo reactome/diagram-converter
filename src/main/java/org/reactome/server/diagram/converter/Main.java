@@ -7,9 +7,7 @@ import org.reactome.server.diagram.converter.config.ReactomeNeo4jConfig;
 import org.reactome.server.diagram.converter.layout.util.FileUtil;
 import org.reactome.server.diagram.converter.qa.QATests;
 import org.reactome.server.diagram.converter.tasks.ConverterTasks;
-import org.reactome.server.graph.domain.model.Pathway;
-import org.reactome.server.graph.exception.CustomQueryException;
-import org.reactome.server.graph.service.AdvancedDatabaseObjectService;
+import org.reactome.server.graph.domain.result.SimpleDatabaseObject;
 import org.reactome.server.graph.service.GeneralService;
 import org.reactome.server.graph.service.util.DatabaseObjectUtils;
 import org.reactome.server.graph.utils.ReactomeGraphCore;
@@ -26,23 +24,37 @@ public class Main {
     public static void main(String[] args) throws JSAPException, SQLException {
 
         // Program Arguments -h, -p, -u, -k
+        Parameter[] parameters = {
+                new FlaggedOption("graph_host", JSAP.STRING_PARSER, "bolt://localhost:7687", JSAP.NOT_REQUIRED,
+                        'a', "graph_host", "The neo4j host")
+                , new FlaggedOption("graph_database", JSAP.STRING_PARSER, "graph.db", JSAP.REQUIRED,
+                'b', "graph_database", "The neo4j database")
+                , new FlaggedOption("graph_user", JSAP.STRING_PARSER, "neo4j", JSAP.NOT_REQUIRED,
+                'c', "graph_user", "The neo4j user")
+                , new FlaggedOption("graph_password", JSAP.STRING_PARSER, "neo4j", JSAP.REQUIRED,
+                'd', "graph_password", "The neo4j password")
+
+                , new FlaggedOption("rel_host", JSAP.STRING_PARSER, "localhost", JSAP.NOT_REQUIRED,
+                'e', "rel_host", "The database host")
+                , new FlaggedOption("rel_database", JSAP.STRING_PARSER, "reactome", JSAP.REQUIRED,
+                'f', "rel_database", "The reactome database name to connect to")
+                , new FlaggedOption("rel_username", JSAP.STRING_PARSER, "reactome", JSAP.REQUIRED,
+                'g', "rel_user", "The database username")
+                , new FlaggedOption("rel_password", JSAP.STRING_PARSER, "reactome", JSAP.REQUIRED,
+                'h', "rel_password", "The password to connect to the database")
+
+                , new FlaggedOption("output", JSAP.STRING_PARSER, JSAP.NO_DEFAULT, JSAP.REQUIRED,
+                'o', "output", "The directory where the converted files are written to.")
+                , new FlaggedOption("target", JSAP.STRING_PARSER, "ALL", JSAP.NOT_REQUIRED,
+                't', "target", "Target pathways to convert. Use either comma separated IDs, pathways for a " +
+                "given species (e.g. 'Homo sapiens') or 'all' for every pathway")
+                .setList(true).setListSeparator(',')
+
+                , new QualifiedSwitch("verbose", JSAP.BOOLEAN_PARSER, null, JSAP.NOT_REQUIRED,
+                'v', "verbose", "Requests verbose output.")
+        };
         SimpleJSAP jsap = new SimpleJSAP(Main.class.getName(), "Connect to Reactome Graph Database",
-                new Parameter[]{
-                        new FlaggedOption("graph_host", JSAP.STRING_PARSER, "localhost", JSAP.NOT_REQUIRED, 'a', "graph_host", "The neo4j host")
-                        , new FlaggedOption("graph_port", JSAP.STRING_PARSER, "7474", JSAP.NOT_REQUIRED, 'b', "graph_port", "The neo4j port")
-                        , new FlaggedOption("graph_user", JSAP.STRING_PARSER, "neo4j", JSAP.NOT_REQUIRED, 'c', "graph_user", "The neo4j user")
-                        , new FlaggedOption("graph_password", JSAP.STRING_PARSER, "neo4j", JSAP.REQUIRED, 'd', "graph_password", "The neo4j password")
-
-                        , new FlaggedOption("rel_host", JSAP.STRING_PARSER, "localhost", JSAP.NOT_REQUIRED, 'e', "rel_host", "The database host")
-                        , new FlaggedOption("rel_database", JSAP.STRING_PARSER, "reactome", JSAP.REQUIRED, 'f', "rel_database", "The reactome database name to connect to")
-                        , new FlaggedOption("rel_username", JSAP.STRING_PARSER, "reactome", JSAP.REQUIRED, 'g', "rel_user", "The database username")
-                        , new FlaggedOption("rel_password", JSAP.STRING_PARSER, "reactome", JSAP.REQUIRED, 'h', "rel_password", "The password to connect to the database")
-
-                        , new FlaggedOption("output", JSAP.STRING_PARSER, JSAP.NO_DEFAULT, JSAP.REQUIRED, 'o', "output", "The directory where the converted files are written to.")
-                        , new QualifiedSwitch("target", JSAP.STRING_PARSER, "ALL", JSAP.NOT_REQUIRED, 't', "target", "Target pathways to convert. Use either comma separated IDs, pathways for a given species (e.g. 'Homo sapiens') or 'all' for every pathway").setList(true).setListSeparator(',')
-
-                        , new QualifiedSwitch("verbose", JSAP.BOOLEAN_PARSER, null, JSAP.NOT_REQUIRED, 'v', "verbose", "Requests verbose output.")
-                }
+                parameters
         );
 
         JSAPResult config = jsap.parse(args);
@@ -51,9 +63,9 @@ public class Main {
         //Initialising ReactomeCore Neo4j configuration
         ReactomeGraphCore.initialise(
                 config.getString("graph_host"),
-                config.getString("graph_port"),
                 config.getString("graph_user"),
                 config.getString("graph_password"),
+                config.getString("graph_database"),
                 ReactomeNeo4jConfig.class
         );
         Integer version = ReactomeGraphCore.getService(GeneralService.class).getDBInfo().getVersion();
@@ -70,10 +82,12 @@ public class Main {
         try {
             Integer relDB = dba.getReleaseNumber();
             if (!Objects.equals(relDB, version)) {
-                System.err.println(
-                        String.format("The databases are from different versions.\n\t Relational db contains version %d (%s)\n\tGraph database contains version %d (%s)",
-                                relDB, config.getString("rel_database"),
-                                version, "Neo4j"));
+                System.err.printf(
+                        "The databases are from different versions.\n" +
+                                "\t Relational db contains version %d (%s)\n" +
+                                "\tGraph database contains version %d (%s)%n",
+                        relDB, config.getString("rel_database"),
+                        version, "Neo4j");
                 System.exit(1);
             }
         } catch (Exception e) {
@@ -88,8 +102,8 @@ public class Main {
         //Check if target pathways are specified
         String[] target = config.getStringArray("target");
 
-        Collection<Pathway> pathways = getTargets(target);
-        if (pathways != null && !pathways.isEmpty()) {
+        Collection<SimpleDatabaseObject> pathways = getTargets(target);
+        if (!pathways.isEmpty()) {
             //Converter tasks initialisation
             ConverterTasks.initialise(target, pathways);
             //Tests initialisation
@@ -99,17 +113,20 @@ public class Main {
         } else {
             System.err.println("No targets found. Please check the parameters.");
         }
+
+        System.exit(0);
     }
 
-    private static Collection<Pathway> getTargets(String[] target) {
-        AdvancedDatabaseObjectService advancedDatabaseObjectService = ReactomeGraphCore.getService(AdvancedDatabaseObjectService.class);
+    private static Collection<SimpleDatabaseObject> getTargets(String[] target) {
+        GeneralService generalService = ReactomeGraphCore.getService(GeneralService.class);
+
         String query;
         Map<String, Object> parametersMap = new HashMap<>();
         if (target.length > 1) {
             query = "MATCH (p:Pathway{hasDiagram:True}) " +
-                    "WHERE p.dbId IN {dbIds} OR p.stId IN {stIds} " +
+                    "WHERE p.dbId IN $dbIds OR p.stId IN $stIds " +
                     "WITH DISTINCT p " +
-                    "RETURN p " +
+                    "RETURN p.dbId as dbId, p.stId as stId, p.displayName as displayName, p.schemaClass as schemaClass " +
                     "ORDER BY p.dbId";
             List<Long> dbIds = new ArrayList<>();
             List<String> stIds = new ArrayList<>();
@@ -128,29 +145,34 @@ public class Main {
             if (aux.toLowerCase().equals("all")) {
                 query = "MATCH (p:Pathway{hasDiagram:True})-[:species]->(s:Species) " +
                         "WITH DISTINCT p, s " +
-                        "RETURN p " +
+                        "RETURN p.dbId as dbId, p.stId as stId, p.displayName as displayName, p.schemaClass as schemaClass " +
                         "ORDER BY s.dbId, p.dbId";
             } else if (DatabaseObjectUtils.isStId(aux)) {
-                query = "MATCH (p:Pathway{hasDiagram:True, stId:{stId}}) RETURN DISTINCT p";
+                query = "MATCH (p:Pathway{hasDiagram:True, stId:$stId}) " +
+                        "RETURN p.dbId as dbId, p.stId as stId, p.displayName as displayName, p.schemaClass as schemaClass ";
                 parametersMap.put("stId", DatabaseObjectUtils.getIdentifier(aux));
             } else if (DatabaseObjectUtils.isDbId(aux)) {
-                query = "MATCH (p:Pathway{hasDiagram:True, dbId:{dbId}}) RETURN DISTINCT p";
+                query = "MATCH (p:Pathway{hasDiagram:True, dbId:$dbId}) " +
+                        "RETURN p.dbId as dbId, p.stId as stId, p.displayName as displayName, p.schemaClass as schemaClass ";
                 parametersMap.put("dbId", DatabaseObjectUtils.getIdentifier(aux));
             } else {
-                query = "MATCH (p:Pathway{hasDiagram:True, speciesName:{speciesName}}) " +
+                query = "MATCH (p:Pathway{hasDiagram:True, speciesName:$speciesName}) " +
                         "WITH DISTINCT p " +
-                        "RETURN p " +
+                        "RETURN p.dbId as dbId, p.stId as stId, p.displayName as displayName, p.schemaClass as schemaClass " +
                         "ORDER BY p.dbId";
                 parametersMap.put("speciesName", aux);
             }
         }
 
         System.out.print("· Retrieving target pathways...");
-        Collection<Pathway> pathways = null;
-        try {
-            pathways = advancedDatabaseObjectService.getCustomQueryResults(Pathway.class, query, parametersMap);
-        } catch (CustomQueryException e) {
-            e.printStackTrace();
+        Collection<SimpleDatabaseObject> pathways = new ArrayList<>();
+        Collection<Map<String, Object>> result = generalService.query(query, parametersMap);
+        for (Map<String, Object> stringObjectMap : result) {
+            SimpleDatabaseObject sdo = new SimpleDatabaseObject();
+            sdo.setStId(stringObjectMap.get("stId").toString());
+            sdo.setDbId(Long.valueOf(stringObjectMap.get("dbId").toString()));
+            sdo.setDisplayName(stringObjectMap.get("displayName").toString());
+            pathways.add(sdo);
         }
         return pathways;
     }

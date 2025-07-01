@@ -4,7 +4,7 @@ import org.reactome.server.diagram.converter.graph.output.Graph;
 import org.reactome.server.diagram.converter.qa.common.AbstractConverterQA;
 import org.reactome.server.diagram.converter.qa.common.QAPriority;
 import org.reactome.server.diagram.converter.qa.common.annotation.GraphTest;
-import org.reactome.server.diagram.converter.utils.reports.SupathwayDetails;
+import org.reactome.server.diagram.converter.utils.reports.SubpathwayDetails;
 import org.reactome.server.graph.exception.CustomQueryException;
 import org.reactome.server.graph.service.AdvancedDatabaseObjectService;
 import org.reactome.server.graph.utils.ReactomeGraphCore;
@@ -49,7 +49,7 @@ public class T401_SubpathwaysWithoutParticipants extends AbstractConverterQA imp
     @Override
     public void run(Graph graph) {
         String query = "" +
-                "MATCH path=(p:Pathway{stId:{stId}})-[:hasEvent*]->(s:Event) " +
+                "MATCH path=(p:Pathway{stId:$stId})-[:hasEvent*]->(s:Event) " +
                 "WHERE NONE(x IN NODES(path) WHERE (x:ReactionLikeEvent)) AND NONE(x IN TAIL(NODES(path)) WHERE x.hasDiagram) " +
                 "WITH DISTINCT s " +
                 "OPTIONAL MATCH path=(s)-[:hasEvent*]->(rle:ReactionLikeEvent) " +
@@ -62,7 +62,7 @@ public class T401_SubpathwaysWithoutParticipants extends AbstractConverterQA imp
         Map<String, Object> parametersMap = new HashMap<>();
         parametersMap.put("stId", graph.getStId());
         try {
-            for (SupathwayDetails sp : ads.getCustomQueryResults(SupathwayDetails.class, query, parametersMap)) {
+            for (SubpathwayDetails sp : ads.getCustomQueryResults(SubpathwayDetails.class, query, parametersMap)) {
                 lines.add(String.format("%s,\"%s\",%s,\"%s\",\"%s\",\"%s\"",
                         graph.getStId(),
                         graph.getDisplayName(),
