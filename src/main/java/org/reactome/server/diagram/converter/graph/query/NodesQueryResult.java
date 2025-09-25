@@ -12,6 +12,7 @@ public class NodesQueryResult extends QueryResult implements CustomQuery {
     private List<Long> children;
     private List<Long> parents;
     private String identifier;
+    private String standardIdentifier;
     private String referenceType;
     private List<String> geneNames;
 
@@ -55,6 +56,14 @@ public class NodesQueryResult extends QueryResult implements CustomQuery {
         this.referenceType = referenceType;
     }
 
+    public String getStandardIdentifier() {
+        return standardIdentifier;
+    }
+
+    public void setStandardIdentifier(String standardIdentifier) {
+        this.standardIdentifier = standardIdentifier;
+    }
+
     @Override
     public CustomQuery build(Record r) {
         NodesQueryResult nodesQueryResult = new NodesQueryResult();
@@ -64,6 +73,7 @@ public class NodesQueryResult extends QueryResult implements CustomQuery {
         nodesQueryResult.setSpeciesID(r.get("speciesID").asLong(0));
         nodesQueryResult.setStId(r.get("stId").asString(null));
         nodesQueryResult.setIdentifier(r.get("identifier").asString(null));
+        nodesQueryResult.setStandardIdentifier(r.get("standardIdentifier").asString(null));
         nodesQueryResult.setReferenceType(r.get("referenceType").asString(null));
 
         if (!r.get("children").isNull()) nodesQueryResult.setChildren(r.get("children").asList(Value::asLong));

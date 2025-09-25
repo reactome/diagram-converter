@@ -67,14 +67,18 @@ public class T904_PhysicalEntityWrongTranslationalModification extends AbstractC
             query = "MATCH (psi:PsiMod)<-[:psiMod]-(tm:TranslationalModification)<-[:hasModifiedResidue]-(pe:PhysicalEntity) " +
                     "WITH DISTINCT pe, tm, psi ";
         } else if (target instanceof Species) {
-            query = "MATCH (psi:PsiMod)<-[:psiMod]-(tm:TranslationalModification)<-[:hasModifiedResidue]-(pe:PhysicalEntity)-[:species]->(:Species{displayName:$speciesName}) " +
+            query = "MATCH (psi:PsiMod)<-[:psiMod]-(tm:TranslationalModification)<-[:hasModifiedResidue]-(pe:PhysicalEntity)" +
+                    "-[:species]->(:Species{displayName:$speciesName}) " +
                     "WITH DISTINCT pe, tm, psi ";
             params.put("speciesName", ((Species) target).getDisplayName());
         } else if (target instanceof Collection) {
             query = "MATCH path=(p:Pathway{hasDiagram:true})-[:hasEvent*]->(rle:ReactionLikeEvent) " +
                     "WHERE p.stId IN $stIds AND SINGLE(x IN NODES(path) WHERE (x:Pathway) AND x.hasDiagram) " +
                     "WITH DISTINCT rle " +
-                    "MATCH (rle)-[:input|output|catalystActivity|physicalEntity|regulatedBy|regulator|hasComponent|hasMember|hasCandidate|repeatedUnit|proteinMarker|RNAMarker*]->(pe:PhysicalEntity)-[:hasModifiedResidue]->(tm:TranslationalModification)-[:psiMod]->(psi:PsiMod) " +
+                    "MATCH (rle)-" +
+                    "[:input|output|catalystActivity|physicalEntity|regulatedBy|" +
+                    "regulator|hasComponent|hasMember|hasCandidate|repeatedUnit|proteinMarker|RNAMarker*]" +
+                    "->(pe:PhysicalEntity)-[:hasModifiedResidue]->(tm:TranslationalModification)-[:psiMod]->(psi:PsiMod) " +
                     "WITH DISTINCT pe, tm, psi ";
             params.put("stIds", target);
         } else {
@@ -84,13 +88,15 @@ public class T904_PhysicalEntityWrongTranslationalModification extends AbstractC
         }
 
         query += "" +
-//              "MATCH (psi:PsiMod)<-[:psiMod]-(tm:TranslationalModification)<-[:hasModifiedResidue]-(pe:PhysicalEntity{speciesName:{speciesName}}) " +
+ // "MATCH (psi:PsiMod)<-[:psiMod]-(tm:TranslationalModification)<-[:hasModifiedResidue]-(pe:PhysicalEntity{speciesName:{speciesName}}) " +
                 "WHERE psi.label IS NULL " +
                 "OPTIONAL MATCH (a)-[:created]->(pe) " +
                 "OPTIONAL MATCH (m)-[:modified]->(pe) " +
-                "WITH DISTINCT pe, tm, psi, CASE WHEN a IS NULL THEN 'null' ELSE a.displayName END AS created, CASE WHEN m IS NULL THEN 'null' ELSE m.displayName END AS modified " +
+                "WITH DISTINCT pe, tm, psi, CASE WHEN a IS NULL THEN 'null' ELSE a.displayName END AS created, " +
+                "   CASE WHEN m IS NULL THEN 'null' ELSE m.displayName END AS modified " +
                 "ORDER BY modified, created, pe.stId, tm.displayName " +
-                "RETURN DISTINCT pe.stId + ',\"' + pe.displayName + '\",\"' + tm.displayName+ '\",' + tm.schemaClass + ',\"' + psi.dbId + ',\"' + psi.displayName + '\",\"' + created + '\",\"' + modified + '\"' AS line";
+                "RETURN DISTINCT pe.stId + ',\"' + pe.displayName + '\",\"' + tm.displayName+ '\",' + tm.schemaClass + '," +
+                "\"' + psi.dbId + ',\"' + psi.displayName + '\",\"' + created + '\",\"' + modified + '\"' AS line";
         try {
             Collection<String> res = ads.getCustomQueryResults(String.class, query, params);
             if (res.size() > 0) {

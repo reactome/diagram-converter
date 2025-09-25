@@ -118,7 +118,7 @@ public class Diagram {
         return rtn.isEmpty() ? null : rtn;
     }
 
-    public DiagramObject getDiagramObjectByDiagramId(Long id){
+    public DiagramObject getDiagramObjectByDiagramId(Long id) {
         return objectMap.get(id);
     }
 
@@ -136,7 +136,7 @@ public class Diagram {
     }
 
     public Boolean isDisease() {
-        return (isDisease!=null && isDisease);
+        return (isDisease != null && isDisease);
     }
 
     public void setIsDisease(Boolean isDisease) {
@@ -208,7 +208,7 @@ public class Diagram {
         return nodes.values();
     }
 
-    public Set<Node> getNodes(Long identifier){
+    public Set<Node> getNodes(Long identifier) {
         return nodes.getElements(identifier);
     }
 
@@ -218,7 +218,14 @@ public class Diagram {
             this.nodes.add(node.reactomeId, node);
             DiagramObject duplicateEntry = this.objectMap.put(node.id, node);
             if (duplicateEntry != null) {
-                logger.error(String.format("[%s] contains Nodes with duplicate diagram IDs >> %s [%d] <-> %s [%d]", getStableId(), node.displayName, node.id, duplicateEntry.displayName, duplicateEntry.id));
+                logger.error(
+                        "[{}] contains Nodes with duplicate diagram IDs >> {} [{}] <-> {} [{}]",
+                        getStableId(),
+                        node.displayName,
+                        node.id,
+                        duplicateEntry.displayName,
+                        duplicateEntry.id
+                );
             }
             setLastId(node);
             return true;
@@ -248,7 +255,7 @@ public class Diagram {
         return edges.values();
     }
 
-    public Set<Edge> getEdges(Long dbId){
+    public Set<Edge> getEdges(Long dbId) {
         return edges.getElements(dbId);
     }
 
@@ -257,7 +264,14 @@ public class Diagram {
             this.edges.add(edge.reactomeId, edge);
             DiagramObject duplicateEntry = this.objectMap.put(edge.id, edge);
             if (duplicateEntry != null) {
-                logger.error(String.format("[%s] contains Edges with duplicate diagram IDs >> %s [%d] <-> %s [%d]", getStableId(), edge.displayName, edge.id, duplicateEntry.displayName, duplicateEntry.id));
+                logger.error(
+                        "[{}] contains Edges with duplicate diagram IDs >> {} [{}] <-> {} [{}]",
+                        getStableId(),
+                        edge.displayName,
+                        edge.id,
+                        duplicateEntry.displayName,
+                        duplicateEntry.id
+                );
             }
             setLastId(edge);
             return true;

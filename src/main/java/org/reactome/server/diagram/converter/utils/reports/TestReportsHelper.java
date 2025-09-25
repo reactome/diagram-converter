@@ -46,7 +46,9 @@ public abstract class TestReportsHelper {
                 "MATCH path=(p:Pathway{hasDiagram:True, dbId:$dbId})-[:hasEvent*]->(rle:ReactionLikeEvent) " +
                 "WHERE SINGLE(x IN NODES(path) WHERE (x:Pathway) AND x.hasDiagram) " +
                 "WITH DISTINCT rle " +
-                "MATCH (rle)-[:input|output|catalystActivity|physicalEntity|entityFunctionalStatus|diseaseEntity|regulatedBy|regulator*]->(pe:PhysicalEntity) " +
+                "MATCH (rle)-" +
+                "[:input|output|catalystActivity|physicalEntity|entityFunctionalStatus|diseaseEntity|regulatedBy|regulator*]" +
+                "->(pe:PhysicalEntity) " +
                 "OPTIONAL MATCH (pe)-[:referenceEntity]->(re:ReferenceEntity) " +
                 "RETURN DISTINCT pe.dbId AS dbId, pe.schemaClass AS schemaClass, " +
                 "       CASE " +
@@ -68,7 +70,9 @@ public abstract class TestReportsHelper {
                 "      path=(p)-[:hasEvent*]->(rle:ReactionLikeEvent) " +
                 "WHERE SINGLE(x IN NODES(path) WHERE (x:Pathway) AND x.hasDiagram) " +
                 "WITH DISTINCT rle " +
-                "MATCH (rle)-[:input|output|catalystActivity|physicalEntity|entityFunctionalStatus|diseaseEntity|regulatedBy|regulator*]->(pe:PhysicalEntity) " +
+                "MATCH (rle)-" +
+                "[:input|output|catalystActivity|physicalEntity|entityFunctionalStatus|diseaseEntity|regulatedBy|regulator*]" +
+                "->(pe:PhysicalEntity) " +
                 "OPTIONAL MATCH (pe)-[:referenceEntity]->(re:ReferenceEntity) " +
                 "RETURN DISTINCT pe.dbId AS dbId, pe.schemaClass AS schemaClass, " +
                 "       CASE " +

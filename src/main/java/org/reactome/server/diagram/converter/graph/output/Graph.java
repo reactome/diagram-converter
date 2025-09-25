@@ -24,17 +24,20 @@ public class Graph {
 
     private Collection<SubpathwayNode> subpathways;
 
-    public Graph(Long dbId, String stId, String displayName, String speciesName, Collection<EntityNode> nodes, Collection<EventNode> edges, Collection<SubpathwayNode> subpathways) {
+    public Graph(
+            Long dbId, String stId, String displayName, String speciesName,
+            Collection<EntityNode> nodes, Collection<EventNode> edges, Collection<SubpathwayNode> subpathways
+    ) {
         this.dbId = dbId;
         this.stId = stId;
         this.displayName = displayName;
         this.speciesName = speciesName;
-        if(nodes!=null) {
+        if (nodes != null) {
             for (EntityNode node : nodes) {
                 this.nodes.put(node.dbId, node);
             }
         }
-        if(edges!=null){
+        if (edges != null) {
             for (EventNode edge : edges) {
                 this.edges.put(edge.dbId, edge);
             }
@@ -60,7 +63,7 @@ public class Graph {
     }
 
     @JsonIgnore
-    public EntityNode getNode(Long dbId){
+    public EntityNode getNode(Long dbId) {
         return nodes.get(dbId);
     }
 
@@ -68,7 +71,7 @@ public class Graph {
         return nodes.values();
     }
 
-    public boolean containsEdge(Long dbId){
+    public boolean containsEdge(Long dbId) {
         return edges.containsKey(dbId);
     }
 

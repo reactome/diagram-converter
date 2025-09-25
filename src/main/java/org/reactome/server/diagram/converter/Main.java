@@ -24,23 +24,37 @@ public class Main {
     public static void main(String[] args) throws JSAPException, SQLException {
 
         // Program Arguments -h, -p, -u, -k
+        Parameter[] parameters = {
+                new FlaggedOption("graph_host", JSAP.STRING_PARSER, "bolt://localhost:7687", JSAP.NOT_REQUIRED,
+                        'a', "graph_host", "The neo4j host")
+                , new FlaggedOption("graph_database", JSAP.STRING_PARSER, "graph.db", JSAP.REQUIRED,
+                'b', "graph_database", "The neo4j database")
+                , new FlaggedOption("graph_user", JSAP.STRING_PARSER, "neo4j", JSAP.NOT_REQUIRED,
+                'c', "graph_user", "The neo4j user")
+                , new FlaggedOption("graph_password", JSAP.STRING_PARSER, "neo4j", JSAP.REQUIRED,
+                'd', "graph_password", "The neo4j password")
+
+                , new FlaggedOption("rel_host", JSAP.STRING_PARSER, "localhost", JSAP.NOT_REQUIRED,
+                'e', "rel_host", "The database host")
+                , new FlaggedOption("rel_database", JSAP.STRING_PARSER, "reactome", JSAP.REQUIRED,
+                'f', "rel_database", "The reactome database name to connect to")
+                , new FlaggedOption("rel_username", JSAP.STRING_PARSER, "reactome", JSAP.REQUIRED,
+                'g', "rel_user", "The database username")
+                , new FlaggedOption("rel_password", JSAP.STRING_PARSER, "reactome", JSAP.REQUIRED,
+                'h', "rel_password", "The password to connect to the database")
+
+                , new FlaggedOption("output", JSAP.STRING_PARSER, JSAP.NO_DEFAULT, JSAP.REQUIRED,
+                'o', "output", "The directory where the converted files are written to.")
+                , new FlaggedOption("target", JSAP.STRING_PARSER, "ALL", JSAP.NOT_REQUIRED,
+                't', "target", "Target pathways to convert. Use either comma separated IDs, pathways for a " +
+                "given species (e.g. 'Homo sapiens') or 'all' for every pathway")
+                .setList(true).setListSeparator(',')
+
+                , new QualifiedSwitch("verbose", JSAP.BOOLEAN_PARSER, null, JSAP.NOT_REQUIRED,
+                'v', "verbose", "Requests verbose output.")
+        };
         SimpleJSAP jsap = new SimpleJSAP(Main.class.getName(), "Connect to Reactome Graph Database",
-                new Parameter[]{
-                        new FlaggedOption("graph_host", JSAP.STRING_PARSER, "bolt://localhost:7687", JSAP.NOT_REQUIRED, 'a', "graph_host", "The neo4j host")
-                        , new FlaggedOption("graph_database", JSAP.STRING_PARSER, "graph.db", JSAP.REQUIRED, 'b', "graph_database", "The neo4j database")
-                        , new FlaggedOption("graph_user", JSAP.STRING_PARSER, "neo4j", JSAP.NOT_REQUIRED, 'c', "graph_user", "The neo4j user")
-                        , new FlaggedOption("graph_password", JSAP.STRING_PARSER, "neo4j", JSAP.REQUIRED, 'd', "graph_password", "The neo4j password")
-
-                        , new FlaggedOption("rel_host", JSAP.STRING_PARSER, "localhost", JSAP.NOT_REQUIRED, 'e', "rel_host", "The database host")
-                        , new FlaggedOption("rel_database", JSAP.STRING_PARSER, "reactome", JSAP.REQUIRED, 'f', "rel_database", "The reactome database name to connect to")
-                        , new FlaggedOption("rel_username", JSAP.STRING_PARSER, "reactome", JSAP.REQUIRED, 'g', "rel_user", "The database username")
-                        , new FlaggedOption("rel_password", JSAP.STRING_PARSER, "reactome", JSAP.REQUIRED, 'h', "rel_password", "The password to connect to the database")
-
-                        , new FlaggedOption("output", JSAP.STRING_PARSER, JSAP.NO_DEFAULT, JSAP.REQUIRED, 'o', "output", "The directory where the converted files are written to.")
-                        , new FlaggedOption("target", JSAP.STRING_PARSER, "ALL", JSAP.NOT_REQUIRED, 't', "target", "Target pathways to convert. Use either comma separated IDs, pathways for a given species (e.g. 'Homo sapiens') or 'all' for every pathway").setList(true).setListSeparator(',')
-
-                        , new QualifiedSwitch("verbose", JSAP.BOOLEAN_PARSER, null, JSAP.NOT_REQUIRED, 'v', "verbose", "Requests verbose output.")
-                }
+                parameters
         );
 
         JSAPResult config = jsap.parse(args);
@@ -68,7 +82,10 @@ public class Main {
         try {
             Integer relDB = dba.getReleaseNumber();
             if (!Objects.equals(relDB, version)) {
-                System.err.printf("The databases are from different versions.\n\t Relational db contains version %d (%s)\n\tGraph database contains version %d (%s)%n",
+                System.err.printf(
+                        "The databases are from different versions.\n" +
+                                "\t Relational db contains version %d (%s)\n" +
+                                "\tGraph database contains version %d (%s)%n",
                         relDB, config.getString("rel_database"),
                         version, "Neo4j");
                 System.exit(1);

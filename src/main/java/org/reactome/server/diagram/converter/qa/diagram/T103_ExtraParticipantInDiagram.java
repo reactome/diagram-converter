@@ -29,7 +29,9 @@ public class T103_ExtraParticipantInDiagram extends AbstractConverterQA implemen
 
     @Override
     public String getDescription() {
-        return "Participants seen in a diagram that shouldn't be there. Mainly the reason is because the reaction where they participate belongs to a subpathway that also has its own diagram.";
+        return "Participants seen in a diagram that shouldn't be there. " +
+                "Mainly the reason is because the reaction where they participate belongs to a subpathway " +
+                "that also has its own diagram.";
     }
 
     @Override

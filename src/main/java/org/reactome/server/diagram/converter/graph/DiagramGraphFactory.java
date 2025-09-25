@@ -26,7 +26,7 @@ import java.util.*;
  */
 public class DiagramGraphFactory {
 
-    private static final AdvancedDatabaseObjectService advancedDatabaseObjectService = ReactomeGraphCore.getService(AdvancedDatabaseObjectService.class);
+    private static final AdvancedDatabaseObjectService aos = ReactomeGraphCore.getService(AdvancedDatabaseObjectService.class);
 
     public Graph getGraph(Diagram diagram) {
         return new Graph(diagram.getDbId(),
@@ -55,19 +55,25 @@ public class DiagramGraphFactory {
         for (Node node : diagram.getNodes()) {
             if (node.renderableClass.equals("ProcessNode")) {
                 greenboxes.add(node.reactomeId);
-                //Changing the renderableClass here won't alter the RenderableClassMismatch test result since it has already been executed at this point
+                // Changing the renderableClass here won't alter the RenderableClassMismatch test result since
+                // it has already been executed at this point
                 if (!processNodes.contains(node.reactomeId)) node.renderableClass = "EncapsulatedNode";
             }
 
             if (structuresDrug.contains(node.reactomeId) && !node.renderableClass.endsWith("Drug")) {
                 String rightRC = node.renderableClass + "Drug";
-                T105_RenderableClassMismatch.add(diagram.getStableId(), diagram.getDisplayName(), node.reactomeId, node.schemaClass, node.displayName, node.renderableClass, rightRC);
+                T105_RenderableClassMismatch.add(
+                        diagram.getStableId(), diagram.getDisplayName(),
+                        node.reactomeId, node.schemaClass, node.displayName, node.renderableClass,
+                        rightRC
+                );
                 node.renderableClass = rightRC;
             }
         }
 
         Map<String, Object> parametersMap = new HashMap<>();
         parametersMap.put("list", greenboxes);
+        //language=Cypher
         String query = "" +
                 "MATCH (p:Pathway)-[:species]->(s:Species) " +
                 "WHERE p.dbId IN $list " +
@@ -77,7 +83,7 @@ public class DiagramGraphFactory {
                 "                p.schemaClass AS schemaClass, " +
                 "                s.dbId AS speciesID";
         try {
-            Collection<QueryResult> nodesQueryResults = advancedDatabaseObjectService.getCustomQueryResults(QueryResult.class, query, parametersMap);
+            Collection<QueryResult> nodesQueryResults = aos.getCustomQueryResults(QueryResult.class, query, parametersMap);
             for (QueryResult result : nodesQueryResults) {
                 rtn.add(new EntityNode(result, diagram.getDiagramIds(result.getDbId())));
             }
@@ -89,7 +95,10 @@ public class DiagramGraphFactory {
         query = "" +
                 "MATCH path=(p:Pathway{dbId:$dbId})-[:hasEvent*]->(rle:ReactionLikeEvent) " +
                 "WHERE single(x IN nodes(path) WHERE (x:Pathway) AND x.hasDiagram) " +
-                "MATCH (rle)-[:input|output|catalystActivity|physicalEntity|entityFunctionalStatus|diseaseEntity|regulatedBy|regulator|hasComponent|hasMember|hasCandidate|repeatedUnit|proteinMarker|RNAMarker*]->(pe:PhysicalEntity) " +
+                "MATCH (rle)-" +
+                "[:input|output|catalystActivity|physicalEntity|entityFunctionalStatus|diseaseEntity|" +
+                "regulatedBy|regulator|hasComponent|hasMember|hasCandidate|repeatedUnit|proteinMarker|RNAMarker*]" +
+                "->(pe:PhysicalEntity) " +
                 "WITH collect(DISTINCT pe) AS pes " +
                 "UNWIND pes AS pe " +
                 "OPTIONAL MATCH (pe)-[:hasComponent|hasMember|hasCandidate|repeatedUnit|proteinMarker|RNAMarker]->(children:PhysicalEntity) " +
@@ -102,11 +111,12 @@ public class DiagramGraphFactory {
                 "       collect(DISTINCT children.dbId) AS children, " +
                 "       collect(DISTINCT parent.dbId) AS parents, " +
                 "       CASE WHEN re.variantIdentifier IS NULL THEN re.identifier ELSE re.variantIdentifier END AS identifier, " +
+                "       re.stId as standardIdentifier, " +
                 "       re.geneName AS geneNames";
 
         parametersMap.put("dbId", diagram.getDbId());
         try {
-            Collection<NodesQueryResult> nodesQueryResults = advancedDatabaseObjectService.getCustomQueryResults(NodesQueryResult.class, query, parametersMap);
+            Collection<NodesQueryResult> nodesQueryResults = aos.getCustomQueryResults(NodesQueryResult.class, query, parametersMap);
             for (NodesQueryResult result : nodesQueryResults) {
                 EntityNode en = new EntityNode(result, diagram.getDiagramIds(result.getDbId()));
                 rtn.add(en);
@@ -121,6 +131,7 @@ public class DiagramGraphFactory {
 
     private Collection<EventNode> getGraphEdges(Diagram diagram) {
         List<EventNode> rtn = new ArrayList<>();
+        //language=Cypher
         String query = "" +
                 "MATCH path=(p:Pathway{dbId:$dbId})-[:hasEvent*]->(:ReactionLikeEvent) " +
                 "WHERE SINGLE(x IN NODES(path) WHERE (x:Pathway) AND x.hasDiagram) " +
@@ -145,7 +156,7 @@ public class DiagramGraphFactory {
         Map<String, Object> parametersMap = new HashMap<>();
         parametersMap.put("dbId", diagram.getDbId());
         try {
-            Collection<EdgesQueryResult> edgesQueryResults = advancedDatabaseObjectService.getCustomQueryResults(EdgesQueryResult.class, query, parametersMap);
+            Collection<EdgesQueryResult> edgesQueryResults = aos.getCustomQueryResults(EdgesQueryResult.class, query, parametersMap);
             for (EdgesQueryResult result : edgesQueryResults) {
                 rtn.add(new EventNode(result, diagram.getDiagramIds(result.getDbId())));
             }
@@ -172,7 +183,7 @@ public class DiagramGraphFactory {
         Map<String, Object> parametersMap = new HashMap<>();
         parametersMap.put("dbId", diagram.getDbId());
         try {
-            Collection<SubpathwaysQueryResult> subpathwaysQueryResults = advancedDatabaseObjectService.getCustomQueryResults(SubpathwaysQueryResult.class, query, parametersMap);
+            var subpathwaysQueryResults = aos.getCustomQueryResults(SubpathwaysQueryResult.class, query, parametersMap);
             for (SubpathwaysQueryResult result : subpathwaysQueryResults) {
                 rtn.add(new SubpathwayNode(result));
             }
@@ -190,7 +201,7 @@ public class DiagramGraphFactory {
         Map<String, Object> params = new HashMap<>();
         params.put("dbId", dbId);
         try {
-            return advancedDatabaseObjectService.getCustomQueryResults(Long.class, query, params);
+            return aos.getCustomQueryResults(Long.class, query, params);
         } catch (CustomQueryException e) {
             return Collections.emptyList();
         }
@@ -201,12 +212,13 @@ public class DiagramGraphFactory {
                 "MATCH path=(p:Pathway{dbId:$dbId})-[:hasEvent*]->(rle:ReactionLikeEvent) " +
                 "WHERE SINGLE(x IN NODES(path) WHERE NOT x.hasDiagram IS NULL AND x.hasDiagram) " +
                 "WITH DISTINCT rle " +
-                "MATCH (rle)-[:input|output|catalystActivity|physicalEntity|regulatedBy|regulator*]->(pe:PhysicalEntity)-[:hasComponent|hasMember|hasCandidate|proteinMarker|RNAMarker*]->(p:Drug) " +
+                "MATCH (rle)-[:input|output|catalystActivity|physicalEntity|regulatedBy|regulator*]->(pe:PhysicalEntity)" +
+                "-[:hasComponent|hasMember|hasCandidate|proteinMarker|RNAMarker*]->(p:Drug) " +
                 "RETURN DISTINCT pe.dbId";
         Map<String, Object> params = new HashMap<>();
         params.put("dbId", dbId);
         try {
-            return advancedDatabaseObjectService.getCustomQueryResults(Long.class, query, params);
+            return aos.getCustomQueryResults(Long.class, query, params);
         } catch (CustomQueryException e) {
             return Collections.emptyList();
         }

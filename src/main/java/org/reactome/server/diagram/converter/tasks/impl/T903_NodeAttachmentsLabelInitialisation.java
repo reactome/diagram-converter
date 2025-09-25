@@ -23,7 +23,10 @@ public class T903_NodeAttachmentsLabelInitialisation extends AbstractConverterTa
 
     // List of psiMod dbIds that correspond to glycans when GroupModifiedResidue instances have a modification
     // Provided by Bijay Jassal
-    private static final List<Long> glycans = Arrays.asList(1467184L, 1467185L, 1467292L, 2022987L, 913651L, 913631L, 2243916L, 2022865L, 3238099L, 448181L, 5615587L, 2063975L);
+    private static final List<Long> glycans = Arrays.asList(
+            1467184L, 1467185L, 1467292L, 2022987L, 913651L, 913631L,
+            2243916L, 2022865L, 3238099L, 448181L, 5615587L, 2063975L
+    );
 
     private static final Logger logger = LoggerFactory.getLogger("converter");
 
@@ -43,16 +46,20 @@ public class T903_NodeAttachmentsLabelInitialisation extends AbstractConverterTa
         if (target instanceof String && target.equals("all")) {
             query = "MATCH (tm:TranslationalModification) ";
         } else if (target instanceof Species) {
-            query = "MATCH (tm:TranslationalModification)<-[:hasModifiedResidue]-(:PhysicalEntity)-[:species]->(:Species{displayName:$speciesName}) " +
+            query = "MATCH (tm:TranslationalModification)<-[:hasModifiedResidue]-(:PhysicalEntity)" +
+                    "-[:species]->(:Species{displayName:$speciesName}) " +
                     "WITH DISTINCT tm ";
             params.put("speciesName", ((Species) target).getDisplayName());
         } else if (target instanceof Collection) {
             query = "MATCH path=(p:Pathway{hasDiagram:true})-[:hasEvent*]->(rle:ReactionLikeEvent) " +
                     "WHERE p.stId IN $stIds AND SINGLE(x IN NODES(path) WHERE (x:Pathway) AND x.hasDiagram) " +
                     "WITH DISTINCT rle " +
-                    "MATCH (rle)-[:input|output|catalystActivity|physicalEntity|regulatedBy|regulator|hasComponent|hasMember|hasCandidate|repeatedUnit|proteinMarker|RNAMarker*]->(:PhysicalEntity)-[:hasModifiedResidue]->(tm:TranslationalModification) " +
+                    "MATCH (rle)-" +
+                    "[:input|output|catalystActivity|physicalEntity|regulatedBy|" +
+                    "regulator|hasComponent|hasMember|hasCandidate|repeatedUnit|proteinMarker|RNAMarker*]" +
+                    "->(:PhysicalEntity)-[:hasModifiedResidue]->(tm:TranslationalModification) " +
                     "WITH DISTINCT tm ";
-                    params.put("stIds", target);
+            params.put("stIds", target);
         } else {
             report = "No query could be created for the target";
             logger.error(report);
