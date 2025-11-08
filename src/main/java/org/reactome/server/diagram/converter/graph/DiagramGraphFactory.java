@@ -14,6 +14,8 @@ import org.reactome.server.diagram.converter.qa.diagram.T105_RenderableClassMism
 import org.reactome.server.graph.exception.CustomQueryException;
 import org.reactome.server.graph.service.AdvancedDatabaseObjectService;
 import org.reactome.server.graph.utils.ReactomeGraphCore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -26,7 +28,26 @@ import java.util.*;
  */
 public class DiagramGraphFactory {
 
-    private static final AdvancedDatabaseObjectService aos = ReactomeGraphCore.getService(AdvancedDatabaseObjectService.class);
+    private static final Logger logger = LoggerFactory.getLogger(DiagramGraphFactory.class);
+    
+    private AdvancedDatabaseObjectService aos;
+    
+    public DiagramGraphFactory() {
+        try {
+            aos = ReactomeGraphCore.getService(AdvancedDatabaseObjectService.class);
+        }
+        catch(Exception e) {
+            logger.warn("Cannot get aos from ReactomeGraphCore. This may cause conversion abort in standalone running: " + e.getMessage());
+        }
+    }
+    
+    public AdvancedDatabaseObjectService getAos() {
+        return aos;
+    }
+
+    public void setAos(AdvancedDatabaseObjectService aos) {
+        this.aos = aos;
+    }
 
     public Graph getGraph(Diagram diagram) {
         return new Graph(diagram.getDbId(),

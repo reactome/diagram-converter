@@ -296,7 +296,7 @@ public abstract class LayoutFactory {
 
     private static String getSpeciesName(GKInstance pathway) {
         try {
-            if (pathway.getSchemClass().isValidAttribute(ReactomeJavaConstants.species)) {
+            if (pathway.getSchemClass() != null && pathway.getSchemClass().isValidAttribute(ReactomeJavaConstants.species)) {
                 List speciess = pathway.getAttributeValuesList(ReactomeJavaConstants.species);
                 if (speciess != null && !speciess.isEmpty()) {
                     GKInstance species = (GKInstance) speciess.get(0);

@@ -27,8 +27,11 @@ public class TrivialChemicals {
     private Set<String> trivialMolecules = new HashSet<>();
 
     public TrivialChemicals() {
+        this(ReactomeGraphCore.getService(AdvancedDatabaseObjectService.class));
+    }
+    
+    public TrivialChemicals(AdvancedDatabaseObjectService ados) {
         try {
-            AdvancedDatabaseObjectService ados = ReactomeGraphCore.getService(AdvancedDatabaseObjectService.class);
             String query = "MATCH (r:ReferenceMolecule) WHERE r.trivial RETURN r.identifier";
             trivialMolecules.addAll(ados.getCustomQueryResults(String.class, query));
         } catch (CustomQueryException e) {
