@@ -1,190 +1,211 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.reactome.server.diagram</groupId>
-  <artifactId>diagram-converter</artifactId>
-  <version>3.1.0</version>
-  <packaging>jar</packaging>
-  <name>Diagram Converter</name>
-  <parent>
-    <groupId>org.reactome.maven</groupId>
-    <artifactId>reactome-parent</artifactId>
-    <version>1.0.5</version>
-  </parent>
-  <organization>
-    <name>The European Bioinformatics Institute</name>
-    <url>https://www.ebi.ac.uk/</url>
-  </organization>
-  <developers>
-    <developer>
-      <id>ksidiro</id>
-      <name>Kostas Sidiropoulos</name>
-    </developer>
-    <developer>
-      <id>fabregat</id>
-      <name>Antonio Fabregat</name>
-    </developer>
-  </developers>
-  <properties>
-    <main.class>org.reactome.server.diagram.converter.Main</main.class>
-  </properties>
-  <dependencies>
-    <!-- Reactome Graph-Core -->
-    <dependency>
-      <groupId>org.reactome.server.graph</groupId>
-      <artifactId>graph-core</artifactId>
-    </dependency>
-    <!--Reactome-base for MYSQL Adapter-->
-    <dependency>
-      <groupId>org.reactome.base</groupId>
-      <artifactId>reactome-base</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>commons-httpclient</groupId>
-          <artifactId>commons-httpclient</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-    </dependency>
-    <!--JSAP console reader-->
-    <dependency>
-      <groupId>com.martiansoftware</groupId>
-      <artifactId>jsap</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jdom</groupId>
-      <artifactId>jdom</artifactId>
-    </dependency>
-    <!-- Open JDK remove javax.xml.bind -->
-    <dependency>
-      <groupId>com.sun.activation</groupId>
-      <artifactId>javax.activation</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>javax.xml.bind</groupId>
-      <artifactId>jaxb-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.sun.xml.bind</groupId>
-      <artifactId>jaxb-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.sun.xml.bind</groupId>
-      <artifactId>jaxb-impl</artifactId>
-    </dependency>
-  </dependencies>
-  <build>
-    <finalName>diagram-converter</finalName>
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-      </resource>
-    </resources>
-    <testResources>
-      <testResource>
-        <directory>src/test/resources</directory>
-        <filtering>true</filtering>
-      </testResource>
-    </testResources>
-    <plugins>
-      <!-- Generate the jar only -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>${maven.jar.version}</version>
-        <executions>
-          <execution>
-            <id>default-jar</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-            <configuration>
-              <excludes>
-                <exclude>**/logback.xml</exclude>
-              </excludes>
-            </configuration>
-          </execution>
-          <execution>
-            <id>exec-jar</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-            <configuration>
-              <classifier>exec</classifier>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-        <version>${spring-boot.version}</version>
-        <configuration>
-          <fork>true</fork>
-          <mainClass>${main.class}</mainClass>
-          <classifier>exec</classifier>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>repackage</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>${maven-resources-plugin.version}</version>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>${maven.compiler.version}</version>
-        <configuration>
-          <source>${java.version}</source>
-          <target>${java.version}</target>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>3.1.1</version>
-        <dependencies>
-          <!-- This dependency allows Checkstyle to understand Java 11 syntax -->
-          <dependency>
-            <groupId>com.puppycrawl.tools</groupId>
-            <artifactId>checkstyle</artifactId>
-            <version>8.44</version>
-          </dependency>
-        </dependencies>
-        <executions>
-          <execution>
-            <id>checkstyle-check</id>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <configLocation>checkstyle.xml</configLocation>
-          <!-- Optional: Set encoding -->
-          <encoding>UTF-8</encoding>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-  <repositories>
-    <!-- EBI repo -->
-    <repository>
-      <id>nexus-ebi-repo</id>
-      <name>The EBI internal repository</name>
-      <url>https://www.ebi.ac.uk/Tools/maven/repos/content/groups/ebi-repo/</url>
-      <releases>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.reactome.server.diagram</groupId>
+    <artifactId>diagram-converter</artifactId>
+    <version>3.0.7-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+	<name>Diagram Converter</name>
+
+    <parent>
+        <groupId>org.reactome.maven</groupId>
+        <artifactId>reactome-parent</artifactId>
+        <version>1.0.5-SNAPSHOT</version>
+    </parent>
+
+	<organization>
+		<name>The European Bioinformatics Institute</name>
+		<url>https://www.ebi.ac.uk/</url>
+	</organization>
+
+	<developers>
+		<developer>
+			<id>ksidiro</id>
+			<name>Kostas Sidiropoulos</name>
+		</developer>
+		<developer>
+			<id>fabregat</id>
+			<name>Antonio Fabregat</name>
+		</developer>
+	</developers>
+
+	<properties>
+
+		<main.class>org.reactome.server.diagram.converter.Main</main.class>
+
+	</properties>
+
+	<dependencies>
+		<!-- Reactome Graph-Core -->
+		<dependency>
+			<groupId>org.reactome.server.graph</groupId>
+			<artifactId>graph-core</artifactId>
+		</dependency>
+
+		<!--Reactome-base for MYSQL Adapter-->
+		<dependency>
+			<groupId>org.reactome.base</groupId>
+			<artifactId>reactome-base</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-httpclient</groupId>
+					<artifactId>commons-httpclient</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+
+		<!--JSAP console reader-->
+		<dependency>
+			<groupId>com.martiansoftware</groupId>
+			<artifactId>jsap</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jdom</groupId>
+			<artifactId>jdom</artifactId>
+		</dependency>
+
+		<!-- Open JDK remove javax.xml.bind -->
+		<dependency>
+			<groupId>com.sun.activation</groupId>
+			<artifactId>javax.activation</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>diagram-converter</finalName>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<filtering>true</filtering>
+			</testResource>
+		</testResources>
+
+		<plugins>
+			<!-- Generate the jar only -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>${maven.jar.version}</version>
+				<executions>
+					<execution>
+						<id>default-jar</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<excludes>
+								<exclude>**/logback.xml</exclude>
+							</excludes>
+						</configuration>
+					</execution>
+					<execution>
+						<id>exec-jar</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<classifier>exec</classifier>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>${spring-boot.version}</version>
+				<configuration>
+					<fork>true</fork>
+					<mainClass>${main.class}</mainClass>
+					<classifier>exec</classifier>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>${maven-resources-plugin.version}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven.compiler.version}</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>3.1.1</version>
+				<dependencies>
+					<!-- This dependency allows Checkstyle to understand Java 11 syntax -->
+					<dependency>
+						<groupId>com.puppycrawl.tools</groupId>
+						<artifactId>checkstyle</artifactId>
+						<version>8.44</version>
+					</dependency>
+				</dependencies>
+				<executions>
+					<execution>
+						<id>checkstyle-check</id>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<configLocation>checkstyle.xml</configLocation>
+					<!-- Optional: Set encoding -->
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<repositories>
+		<!-- EBI repo -->
+		<repository>
+			<id>nexus-ebi-repo</id>
+			<name>The EBI internal repository</name>
+			<url>https://www.ebi.ac.uk/Tools/maven/repos/content/groups/ebi-repo/</url>
+			<releases>
 			</releases>
       <snapshots>
         <enabled>false</enabled>

@@ -73,6 +73,7 @@ public class DiagramGraphFactory {
 
         Map<String, Object> parametersMap = new HashMap<>();
         parametersMap.put("list", greenboxes);
+        //language=Cypher
         String query = "" +
                 "MATCH (p:Pathway)-[:species]->(s:Species) " +
                 "WHERE p.dbId IN $list " +
@@ -110,6 +111,7 @@ public class DiagramGraphFactory {
                 "       collect(DISTINCT children.dbId) AS children, " +
                 "       collect(DISTINCT parent.dbId) AS parents, " +
                 "       CASE WHEN re.variantIdentifier IS NULL THEN re.identifier ELSE re.variantIdentifier END AS identifier, " +
+                "       re.stId as standardIdentifier, " +
                 "       re.geneName AS geneNames";
 
         parametersMap.put("dbId", diagram.getDbId());
@@ -129,6 +131,7 @@ public class DiagramGraphFactory {
 
     private Collection<EventNode> getGraphEdges(Diagram diagram) {
         List<EventNode> rtn = new ArrayList<>();
+        //language=Cypher
         String query = "" +
                 "MATCH path=(p:Pathway{dbId:$dbId})-[:hasEvent*]->(:ReactionLikeEvent) " +
                 "WHERE SINGLE(x IN NODES(path) WHERE (x:Pathway) AND x.hasDiagram) " +
