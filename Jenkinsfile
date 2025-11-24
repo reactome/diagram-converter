@@ -23,7 +23,7 @@ pipeline{
 		stage('Check Graph DB build succeeded'){
 			steps{
 				script{
-                                    utils.checkUpstreamBuildsSucceeded("GenerateGraphDatabase")
+					utils.checkUpstreamBuildsSucceeded("GenerateGraphDatabase")
 				}
 			}
 		}
@@ -56,7 +56,7 @@ pipeline{
 					        	// Create archive that will be stored on S3.
 							sh "tar -zcf diagrams-v${releaseVersion}.tgz ${env.OUTPUT_FOLDER}/"
 							// Restart tomcat9 and neo4j services after updates were made to graph db.
-					        	sh "sudo service tomcat9 stop"
+							sh "sudo service tomcat9 stop"
 							sh "sudo service neo4j stop"
 							sh "sudo service neo4j start"
 							sh "sudo service tomcat9 start"
@@ -71,21 +71,21 @@ pipeline{
 		stage('Post: Compare previous release file number') {
 		    steps{
 		        script{
-				def releaseVersion = utils.getReleaseVersion()
-				def previousReleaseVersion = utils.getPreviousReleaseVersion()
-				def previousDiagramsArchive = "diagrams-v${previousReleaseVersion}.tgz"
-				sh "mkdir -p ${previousReleaseVersion}"
-				// Download previous diagram-converter output files and extract them.
-				sh "aws s3 --no-progress cp s3://reactome/private/releases/${previousReleaseVersion}/diagram_converter/data/${previousDiagramsArchive} ${previousReleaseVersion}/"
-				dir("${previousReleaseVersion}"){
-					sh "tar -xf ${previousDiagramsArchive}"
-				}
-				// Output number of JSON diagram files between releases.
-				def currentDiagramsFileCount = findFiles(glob: "${env.OUTPUT_FOLDER}/*").size()
-				def previousDiagramsFileCount = findFiles(glob: "${previousReleaseVersion}/${env.OUTPUT_FOLDER}/*").size()
-				echo("Total diagram files for v${releaseVersion}: ${currentDiagramsFileCount}")
-				echo("Total diagram files for v${previousReleaseVersion}: ${previousDiagramsFileCount}")
-				sh "rm -r ${previousReleaseVersion}*"
+					def releaseVersion = utils.getReleaseVersion()
+					def previousReleaseVersion = utils.getPreviousReleaseVersion()
+					def previousDiagramsArchive = "diagrams.tgz"
+					sh "mkdir -p ${previousReleaseVersion}"
+					// Download previous diagram-converter output files and extract them.
+					sh "aws s3 --no-progress cp s3://reactome/private/releases/${previousReleaseVersion}/diagram_converter/data/${previousDiagramsArchive} ${previousReleaseVersion}/"
+					dir("${previousReleaseVersion}"){
+						sh "tar -xf ${previousDiagramsArchive}"
+					}
+					// Output number of JSON diagram files between releases.
+					def currentDiagramsFileCount = findFiles(glob: "${env.OUTPUT_FOLDER}/*").size()
+					def previousDiagramsFileCount = findFiles(glob: "${previousReleaseVersion}/${env.OUTPUT_FOLDER}/*").size()
+					echo("Total diagram files for v${releaseVersion}: ${currentDiagramsFileCount}")
+					echo("Total diagram files for v${previousReleaseVersion}: ${previousDiagramsFileCount}")
+					sh "rm -r ${previousReleaseVersion}*"
 		        }
 		    }
 		}
@@ -107,7 +107,7 @@ pipeline{
 		            def downloadPath = "${env.ABS_DOWNLOAD_PATH}/${releaseVersion}"
 		            sh "cp diagram_converter_graph_database.dump*tgz ${finalGraphDbArchive}"
 		            sh "cp ${finalGraphDbArchive} ${downloadPath}/"
-			    sh "if [ -d ${downloadPath}/diagram/ ]; then sudo rm -r ${downloadPath}/diagram/; mkdir ${downloadPath}/diagram/; fi"
+			    	sh "if [ -d ${downloadPath}/diagram/ ]; then sudo rm -r ${downloadPath}/diagram/; mkdir ${downloadPath}/diagram/; fi"
 		            sh "mv ${env.OUTPUT_FOLDER} ${downloadPath}/ "
 		        }
 		    }
