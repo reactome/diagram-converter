@@ -105,6 +105,7 @@ pipeline{
 		            def finalGraphDbArchive = "reactome.graphdb.tgz"
 		            def releaseVersion = utils.getReleaseVersion()
 		            def downloadPath = "${env.ABS_DOWNLOAD_PATH}/${releaseVersion}"
+					sh "sudo chmod -R g+w ${downloadPath}/"
 		            sh "cp diagram_converter_graph_database.dump*tgz ${finalGraphDbArchive}"
 		            sh "cp ${finalGraphDbArchive} ${downloadPath}/"
 			    	sh "if [ -d ${downloadPath}/diagram/ ]; then sudo rm -r ${downloadPath}/diagram/; mkdir ${downloadPath}/diagram/; fi"
@@ -117,7 +118,7 @@ pipeline{
 			steps{
 				script{
 				    def releaseVersion = utils.getReleaseVersion()
-				    def dataFiles = ["diagrams-v${releaseVersion}.tgz", "reactome.graphdb.tgz"]
+				    def dataFiles = ["diagrams.tgz", "reactome.graphdb.tgz"]
 					def logFiles = ["reports/*"]
 					// Note at time of writing diagram-converter does not output log files (but makes very, very verbose stdout)
 					def foldersToDelete = []
