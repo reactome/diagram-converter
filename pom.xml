@@ -3,18 +3,18 @@
 		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.reactome.server.diagram</groupId>
-    <artifactId>diagram-converter</artifactId>
-    <version>3.0.7-SNAPSHOT</version>
-    <packaging>jar</packaging>
+	<groupId>org.reactome.server.diagram</groupId>
+	<artifactId>diagram-converter</artifactId>
+	<version>3.0.7-SNAPSHOT</version>
+	<packaging>jar</packaging>
 
 	<name>Diagram Converter</name>
 
-    <parent>
-        <groupId>org.reactome.maven</groupId>
-        <artifactId>reactome-parent</artifactId>
-        <version>1.0.5-SNAPSHOT</version>
-    </parent>
+	<parent>
+		<groupId>org.reactome.maven</groupId>
+		<artifactId>reactome-parent</artifactId>
+		<version>1.0.5-SNAPSHOT</version>
+	</parent>
 
 	<organization>
 		<name>The European Bioinformatics Institute</name>
@@ -92,6 +92,12 @@
 		<dependency>
 			<groupId>com.sun.xml.bind</groupId>
 			<artifactId>jaxb-impl</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.reactome.release.verifier</groupId>
+			<artifactId>verifier-lib</artifactId>
+			<version>1.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
@@ -207,20 +213,32 @@
 			<url>https://www.ebi.ac.uk/Tools/maven/repos/content/groups/ebi-repo/</url>
 			<releases>
 			</releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-    <!-- EBI SNAPSHOT repo -->
-    <repository>
-      <id>nexus-ebi-snapshot-repo</id>
-      <name>The EBI internal snapshot repository</name>
-      <url>https://www.ebi.ac.uk/Tools/maven/repos/content/groups/ebi-snapshots/</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
+			<snapshots>
+				<enabled>false</enabled>
 			</snapshots>
-    </repository>
-  </repositories>
+		</repository>
+		<!-- EBI SNAPSHOT repo -->
+		<repository>
+			<id>nexus-ebi-snapshot-repo</id>
+			<name>The EBI internal snapshot repository</name>
+			<url>https://www.ebi.ac.uk/Tools/maven/repos/content/groups/ebi-snapshots/</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+			</snapshots>
+		</repository>
+		<!-- Sonatype central SNAPSHOT repo -->
+		<repository>
+			<name>Central Portal Snapshots</name>
+			<id>central-portal-snapshots</id>
+			<url>https://central.sonatype.com/repository/maven-snapshots/</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 </project>
