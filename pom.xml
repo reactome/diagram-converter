@@ -33,9 +33,8 @@
 	</developers>
 
 	<properties>
-
 		<main.class>org.reactome.server.diagram.converter.Main</main.class>
-
+		<verifier.main.class>org.reactome.server.diagram.converter.verifier.DiagramConverterVerifier</verifier.main.class>
 	</properties>
 
 	<dependencies>
@@ -149,16 +148,36 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>${spring-boot.version}</version>
-				<configuration>
-					<fork>true</fork>
-					<mainClass>${main.class}</mainClass>
-					<classifier>exec</classifier>
-				</configuration>
+
 				<executions>
+					<!-- Disable default repackage execution -->
 					<execution>
+						<id>repackage</id>
+						<phase>none</phase>
+					</execution>
+
+					<!-- Main executable -->
+					<execution>
+						<id>repackage-main</id>
 						<goals>
 							<goal>repackage</goal>
 						</goals>
+						<configuration>
+							<classifier>exec</classifier>
+							<mainClass>${main.class}</mainClass>
+						</configuration>
+					</execution>
+
+					<!-- Verifier executable -->
+					<execution>
+						<id>repackage-verifier</id>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+						<configuration>
+							<classifier>verifier</classifier>
+							<mainClass>${verifier.main.class}</mainClass>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
