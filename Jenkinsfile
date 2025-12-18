@@ -65,30 +65,31 @@ pipeline{
 				}
 			}
 		}
-		
+
 		// There are generally over 30k JSON diagram files produced in a typical release.
 		// This stage gets the file counts between the current and previous release, which allows for quick review.
 		stage('Post: Compare previous release file number') {
-		    steps{
-		        script{
-				def releaseVersion = utils.getReleaseVersion()
-				def previousReleaseVersion = utils.getPreviousReleaseVersion()
-				def previousDiagramsArchive = "diagrams.tgz"
-				sh "mkdir -p ${previousReleaseVersion}"
-				// Download previous diagram-converter output files and extract them.
-				sh "aws s3 --no-progress cp s3://reactome/private/releases/${previousReleaseVersion}/diagram_converter/data/${previousDiagramsArchive} ${previousReleaseVersion}/"
-				dir("${previousReleaseVersion}"){
-					sh "tar -xf ${previousDiagramsArchive}"
-				}
-				// Output number of JSON diagram files between releases.
-				def currentDiagramsFileCount = findFiles(glob: "${env.OUTPUT_FOLDER}/*").size()
-				def previousDiagramsFileCount = findFiles(glob: "${previousReleaseVersion}/${env.OUTPUT_FOLDER}/*").size()
-				echo("Total diagram files for v${releaseVersion}: ${currentDiagramsFileCount}")
-				echo("Total diagram files for v${previousReleaseVersion}: ${previousDiagramsFileCount}")
-				sh "rm -r ${previousReleaseVersion}*"
+			steps{
+				script{
+					def releaseVersion = utils.getReleaseVersion()
+					def previousReleaseVersion = utils.getPreviousReleaseVersion()
+					def previousDiagramsArchive = "diagrams.tgz"
+					sh "mkdir -p ${previousReleaseVersion}"
+					// Download previous diagram-converter output files and extract them.
+					sh "aws s3 --no-progress cp s3://reactome/private/releases/${previousReleaseVersion}/diagram_converter/data/${previousDiagramsArchive} ${previousReleaseVersion}/"
+					dir("${previousReleaseVersion}"){
+						sh "tar -xf ${previousDiagramsArchive}"
+					}
+					// Output number of JSON diagram files between releases.
+					def currentDiagramsFileCount = findFiles(glob: "${env.OUTPUT_FOLDER}/*").size()
+					def previousDiagramsFileCount = findFiles(glob: "${previousReleaseVersion}/${env.OUTPUT_FOLDER}/*").size()
+					echo("Total diagram files for v${releaseVersion}: ${currentDiagramsFileCount}")
+					echo("Total diagram files for v${previousReleaseVersion}: ${previousDiagramsFileCount}")
+					sh "rm -r ${previousReleaseVersion}*"
 				}
 			}
 		}
+
 		// Archive FINAL graph database file for release.
 		stage('Post: Back up final graph database') {
 			steps{
@@ -98,6 +99,7 @@ pipeline{
 				}
 			}
 		}
+
 		// Move diagram files and FINAL graph database to downloads folder.
 		stage('Post: Move FINAL graph db and diagrams to download folder') {
 			steps{
@@ -112,6 +114,7 @@ pipeline{
 				}
 			}
 		}
+
 		// Archive everything on S3, and move the 'diagram' folder to the download/XX folder.
 		stage('Post: Archive Outputs'){
 			steps{
