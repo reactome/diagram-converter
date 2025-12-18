@@ -44,6 +44,7 @@ pipeline{
 			steps{
 				script{
 					def releaseVersion = utils.getReleaseVersion()
+
 					sh "mkdir -p ${env.OUTPUT_FOLDER}"
 					sh "rm -rf ${env.OUTPUT_FOLDER}/*"
 					sh "mkdir -p reports"
@@ -66,6 +67,41 @@ pipeline{
 			}
 		}
 
+		// Execute the verifier jar file checking for the existence and proper file sizes of the diagram files
+		stage('Post: Verify DiagramConverter ran correctly') {
+			steps {
+				script {
+					def releaseVersion = utils.getReleaseVersion()
+
+					sh """
+						docker run \\
+						--rm \\
+						-v ${pwd()}/${env.OUTPUT_FOLDER}:${CONT_ROOT}/${env.OUTPUT_FOLDER}/ \\
+						-v \$HOME/.aws:/root/.aws:ro \\
+						-e AWS_REGION=us-east-1 \\
+						--net=host \\
+						--name ${CONT_NAME}_verifier \\
+						${ECR_URL}:latest \\
+						/bin/bash -c "java -jar target/diagram-converter-verifier.jar --releaseNumber ${releaseVersion} --output ${CONT_ROOT}/${env.OUTPUT_FOLDER} --expectedFileCount 30000"
+					"""
+				}
+			}
+		}
+
+		// Creates a list of files and their sizes to use for comparison baseline during next release
+		stage('Post: Create files and sizes list to upload for next release\'s verifier') {
+			steps {
+				script {
+					def fileSizeList = "files_and_sizes.txt"
+					def releaseVersion = utils.getReleaseVersion()
+
+					sh "find diagrams.tgz -type f -printf \"%s\t%P\n\" > ${fileSizeList}"
+					sh "aws s3 --no-progress cp ${fileSizeList} s3://reactome/private/releases/${releaseVersion}/diagram_converter/data/"
+					sh "rm ${fileSizeList}"
+				}
+			}
+		}
+
 		// There are generally over 30k JSON diagram files produced in a typical release.
 		// This stage gets the file counts between the current and previous release, which allows for quick review.
 		stage('Post: Compare previous release file number') {
@@ -74,15 +110,18 @@ pipeline{
 					def releaseVersion = utils.getReleaseVersion()
 					def previousReleaseVersion = utils.getPreviousReleaseVersion()
 					def previousDiagramsArchive = "diagrams.tgz"
+
 					sh "mkdir -p ${previousReleaseVersion}"
 					// Download previous diagram-converter output files and extract them.
 					sh "aws s3 --no-progress cp s3://reactome/private/releases/${previousReleaseVersion}/diagram_converter/data/${previousDiagramsArchive} ${previousReleaseVersion}/"
 					dir("${previousReleaseVersion}"){
 						sh "tar -xf ${previousDiagramsArchive}"
 					}
+
 					// Output number of JSON diagram files between releases.
 					def currentDiagramsFileCount = findFiles(glob: "${env.OUTPUT_FOLDER}/*").size()
 					def previousDiagramsFileCount = findFiles(glob: "${previousReleaseVersion}/${env.OUTPUT_FOLDER}/*").size()
+
 					echo("Total diagram files for v${releaseVersion}: ${currentDiagramsFileCount}")
 					echo("Total diagram files for v${previousReleaseVersion}: ${previousDiagramsFileCount}")
 					sh "rm -r ${previousReleaseVersion}*"
@@ -107,6 +146,7 @@ pipeline{
 					def finalGraphDbArchive = "reactome.graphdb.tgz"
 					def releaseVersion = utils.getReleaseVersion()
 					def downloadPath = "${env.ABS_DOWNLOAD_PATH}/${releaseVersion}"
+
 					sh "cp diagram_converter_graph_database.dump*tgz ${finalGraphDbArchive}"
 					sh "cp ${finalGraphDbArchive} ${downloadPath}/"
 					sh "if [ -d ${downloadPath}/diagram/ ]; then sudo rm -r ${downloadPath}/diagram/; mkdir ${downloadPath}/diagram/; fi"
@@ -124,6 +164,7 @@ pipeline{
 					def logFiles = ["reports/*"]
 					// Note at time of writing diagram-converter does not output log files (but makes very, very verbose stdout)
 					def foldersToDelete = []
+
 					utils.cleanUpAndArchiveBuildFiles("diagram_converter", dataFiles, logFiles, foldersToDelete)
 				}
 			}
