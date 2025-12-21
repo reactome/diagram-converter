@@ -82,13 +82,13 @@ pipeline{
 					sh """
 						docker run \\
 						--rm \\
-						-v ${pwd()}/${env.OUTPUT_FOLDER}:${CONT_ROOT}/${env.OUTPUT_FOLDER}/ \\
+						-v ${pwd()}:${CONT_ROOT} \\
 						-v \$HOME/.aws:/root/.aws:ro \\
 						-e AWS_REGION=us-east-1 \\
 						--net=host \\
 						--name ${CONT_NAME}_verifier \\
 						${ECR_URL}:latest \\
-						/bin/bash -c "java -jar target/diagram-converter-verifier.jar --releaseNumber ${releaseVersion} --output ${CONT_ROOT}/${env.OUTPUT_FOLDER} --expectedFileCount 30000"
+						/bin/bash -c "java -jar target/diagram-converter-verifier.jar --releaseNumber ${releaseVersion} --output ${CONT_ROOT} --expectedFileCount 30000"
 					"""
 				}
 			}
