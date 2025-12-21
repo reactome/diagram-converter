@@ -52,7 +52,13 @@ pipeline{
 					withCredentials([usernamePassword(credentialsId: 'mySQLUsernamePassword', passwordVariable: 'mysqlPass', usernameVariable: 'mysqlUser')]){
 						withCredentials([usernamePassword(credentialsId: 'neo4jUsernamePassword', passwordVariable: 'neo4jPass', usernameVariable: 'neo4jUser')]){
 							sh """\
-								docker run -v \$(pwd)/reports:${CONT_ROOT}/reports -v \$(pwd)/${env.OUTPUT_FOLDER}:${CONT_ROOT}/${env.OUTPUT_FOLDER} --net=host --name ${CONT_NAME} ${ECR_URL}:latest /bin/bash -c 'java -Dlogback.configurationFile=src/main/resources/logback.xml -jar target/diagram-converter-exec.jar --graph_user $neo4jUser --graph_password $neo4jPass --rel_user $mysqlUser --rel_password $mysqlPass --rel_database ${env.REACTOME_DB} --output ./${env.OUTPUT_FOLDER}'
+								docker run \\
+								-v \$(pwd)/reports:${CONT_ROOT}/reports \\
+								-v \$(pwd)/${env.OUTPUT_FOLDER}:${CONT_ROOT}/${env.OUTPUT_FOLDER} \\
+								--net=host \\
+								--name ${CONT_NAME} \\
+								${ECR_URL}:latest \\
+								/bin/bash -c 'java -Dlogback.configurationFile=src/main/resources/logback.xml -jar target/diagram-converter-exec.jar --graph_user $neo4jUser --graph_password $neo4jPass --rel_user $mysqlUser --rel_password $mysqlPass --rel_database ${env.REACTOME_DB} --output ./${env.OUTPUT_FOLDER}'
 							"""
 							// Create archive that will be stored on S3.
 							sh "tar -zcf diagrams.tgz ${env.OUTPUT_FOLDER}/"
