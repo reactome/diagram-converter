@@ -77,19 +77,32 @@ pipeline{
 		stage('Post: Verify DiagramConverter ran correctly') {
 			steps {
 				script {
-					def releaseVersion = utils.getReleaseVersion()
-
-					sh """
-						docker run \\
-						--rm \\
-						-v ${pwd()}:${CONT_ROOT} \\
-						-v \$HOME/.aws:/root/.aws:ro \\
-						-e AWS_REGION=us-east-1 \\
-						--net=host \\
-						--name ${CONT_NAME}_verifier \\
-						${ECR_URL}:latest \\
-						/bin/bash -c "java -jar target/diagram-converter-verifier.jar --releaseNumber ${releaseVersion} --output ${CONT_ROOT} --expectedFileCount 30000"
-					"""
+				    def releaseVersion = utils.getReleaseVersion()
+				    def outputDirectory = "/output"
+				    def expectedFileCount = 30000
+				    
+				    withCredentials([[
+                        $class: 'AmazonWebServicesCredentialsBinding',
+                        credentialsId: 'jenkins-aws'
+                    ]]) {
+                        sh """
+                            docker run \\
+                            --rm \\
+                            -v ${pwd()}:${outputDirectory} \\
+                            -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \\
+                            -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \\
+                            -e AWS_REGION=us-east-1 \\
+                            --net=host \\
+                            --name ${CONT_NAME}_verifier \\
+                            ${ECR_URL}:latest \\
+                            java \\
+                            -Dlogback.configurationFile=${CONT_ROOT}/resources/logback.xml \\
+                            -jar ${CONT_ROOT}/target/diagram-converter-verifier.jar \\
+                            --releaseNumber ${releaseVersion} \\
+                            --output ${outputDirectory} \\
+                            --expectedFileCount ${expectedFileCount}
+                        """
+                    }
 				}
 			}
 		}
