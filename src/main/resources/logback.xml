@@ -38,15 +38,22 @@
         <appender-ref ref="converterFileAppender"/>
     </logger>
 
-    <!-- Setting up neo4j and spring logging to ERROR -->
-    <logger name="org.neo4j" level="ERROR" />
-    <logger name="org.springframework" level="ERROR" />
-    <logger name="org.reflections.Reflections" level="ERROR" />
-    <!-- Below packages log a lot of unnecessary information if not adjusted (jcook 2020) -->
-    <logger name="org.apache" level="ERROR" />
-    <logger name="httpclient" level="ERROR" /> 
-
-
+    <!-- Suppress noisy library logs -->
+    <logger name="org.apache.http" level="WARN"/>
+    <logger name="org.apache.http.wire" level="WARN"/>
+    <logger name="org.apache.http.impl" level="WARN"/>
+    <logger name="software.amazon.awssdk" level="WARN"/>
+    <logger name="software.amazon.awssdk.core.internal.http.loader" level="WARN"/>
+    <logger name="software.amazon.awssdk.core.interceptor.ExecutionInterceptorChain" level="WARN"/>
+    <logger name="software.amazon.awssdk.auth.credentials" level="WARN"/>
+    <logger name="software.amazon.awssdk.retries" level="WARN"/>
+    <logger name="software.amazon.awssdk.request" level="WARN"/>
+    <logger name="software.amazon.awssdk.http.apache.internal.conn.IdleConnectionReaper" level="WARN"/>
+    <logger name="software.amazon.awssdk.http.apache.internal.conn.SdkTlsSocketFactory" level="WARN"/>
+    <logger name="software.amazon.awssdk.http.apache.internal.net.SdkSslSocket" level="WARN"/>
+    <logger name="org.springframework" level="ERROR"/>
+    <logger name="org.neo4j" level="ERROR"/>
+    <logger name="org.reflections.Reflections" level="ERROR"/>
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />
