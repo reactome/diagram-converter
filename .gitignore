@@ -34,3 +34,6 @@ logs
 
 # Locally stored "Eclipse launch configurations"
 *.launch
+
+# Misc.
+archive/
