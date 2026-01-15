@@ -19,6 +19,7 @@ public class EntityNode extends GraphNode {
     //do not have main resources (members or components are treated separately).
     public String identifier = null;
     public String standardIdentifier = null;
+    public String chebiIdentifier = null;
     public String referenceType = null;
     public List<String> geneNames = null;
 
@@ -37,6 +38,7 @@ public class EntityNode extends GraphNode {
         this.referenceType = node.getReferenceType();
         this.identifier = node.getIdentifier();
         this.standardIdentifier = node.getStandardIdentifier();
+        this.chebiIdentifier = node.getChebiIdentifier();
         this.geneNames = node.getGeneNames();
         this.children = node.getChildren();
         this.parents = node.getParents();
