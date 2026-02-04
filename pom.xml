@@ -5,7 +5,7 @@
 
     <groupId>org.reactome.server.diagram</groupId>
     <artifactId>diagram-converter</artifactId>
-    <version>3.0.7-SNAPSHOT</version>
+    <version>3.0.7.CT</version>
     <packaging>jar</packaging>
 
 	<name>Diagram Converter</name>
@@ -54,6 +54,10 @@
 					<groupId>commons-httpclient</groupId>
 					<artifactId>commons-httpclient</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>org.apache.xmlgraphics</groupId>
+					<artifactId>batik-all</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 
@@ -72,6 +76,11 @@
 			<groupId>org.jdom</groupId>
 			<artifactId>jdom</artifactId>
 		</dependency>
+		
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
 
 		<!-- Open JDK remove javax.xml.bind -->
 		<dependency>

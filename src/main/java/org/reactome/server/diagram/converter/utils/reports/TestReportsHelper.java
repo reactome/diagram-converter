@@ -1,20 +1,35 @@
 package org.reactome.server.diagram.converter.utils.reports;
 
-import org.reactome.server.graph.exception.CustomQueryException;
-import org.reactome.server.graph.service.AdvancedDatabaseObjectService;
-import org.reactome.server.graph.utils.ReactomeGraphCore;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import org.reactome.server.graph.exception.CustomQueryException;
+import org.reactome.server.graph.service.AdvancedDatabaseObjectService;
+import org.reactome.server.graph.utils.ReactomeGraphCore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @author Antonio Fabregat (fabregat@ebi.ac.uk)
  */
-public abstract class TestReportsHelper {
-
-    private static AdvancedDatabaseObjectService ads = ReactomeGraphCore.getService(AdvancedDatabaseObjectService.class);
-
+public class TestReportsHelper {
+    private static final Logger logger = LoggerFactory.getLogger(TestReportsHelper.class);
+    private static AdvancedDatabaseObjectService ads;
+    
+    static {
+        try {
+            ads = ReactomeGraphCore.getService(AdvancedDatabaseObjectService.class);
+        }
+        catch(Exception e) {
+            logger.warn("Cannot initialize ads. This may result abort in standalone conversion: " + e.getMessage());
+        }
+    }
+    
+    public static void setAdvancedDatabaseObjectService(AdvancedDatabaseObjectService service) {
+        ads = service;
+    }
+    
     public static String getCreatedModified(Long dbId) {
         try {
             CurationDetails rtn = ads.getCustomQueryResult(CurationDetails.class, "" +

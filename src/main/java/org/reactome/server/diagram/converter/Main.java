@@ -68,7 +68,7 @@ public class Main {
                 config.getString("graph_database"),
                 ReactomeNeo4jConfig.class
         );
-        Integer version = ReactomeGraphCore.getService(GeneralService.class).getDBInfo().getVersion();
+//        Integer version = ReactomeGraphCore.getService(GeneralService.class).getDBInfo().getVersion();
 
         MySQLAdaptor dba = new MySQLAdaptor(
                 config.getString("rel_host"),
@@ -78,23 +78,23 @@ public class Main {
         );
         dba.setUseCache(false);
 
-        //Checking whether the relational and the graph database are using the same released data
-        try {
-            Integer relDB = dba.getReleaseNumber();
-            if (!Objects.equals(relDB, version)) {
-                System.err.printf(
-                        "The databases are from different versions.\n" +
-                                "\t Relational db contains version %d (%s)\n" +
-                                "\tGraph database contains version %d (%s)%n",
-                        relDB, config.getString("rel_database"),
-                        version, "Neo4j");
-                System.exit(1);
-            }
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-            System.err.println("Problems retrieving the release version for the databases.");
-            System.exit(1);
-        }
+//        //Checking whether the relational and the graph database are using the same released data
+//        try {
+//            Integer relDB = dba.getReleaseNumber();
+//            if (!Objects.equals(relDB, version)) {
+//                System.err.printf(
+//                        "The databases are from different versions.\n" +
+//                                "\t Relational db contains version %d (%s)\n" +
+//                                "\tGraph database contains version %d (%s)%n",
+//                        relDB, config.getString("rel_database"),
+//                        version, "Neo4j");
+//                System.exit(1);
+//            }
+//        } catch (Exception e) {
+//            System.err.println(e.getMessage());
+//            System.err.println("Problems retrieving the release version for the databases.");
+//            System.exit(1);
+//        }
 
         //Check if output directory exists
         final String output = FileUtil.checkFolderName(config.getString("output"));
@@ -102,17 +102,21 @@ public class Main {
         //Check if target pathways are specified
         String[] target = config.getStringArray("target");
 
-        Collection<SimpleDatabaseObject> pathways = getTargets(target);
-        if (!pathways.isEmpty()) {
-            //Converter tasks initialisation
-            ConverterTasks.initialise(target, pathways);
-            //Tests initialisation
-            QATests.initialise(version);
-            //Conversion
-            Converter.run(pathways, dba, output);
-        } else {
-            System.err.println("No targets found. Please check the parameters.");
-        }
+//        Collection<SimpleDatabaseObject> pathways = getTargets(target);
+//        if (!pathways.isEmpty()) {
+//            //Converter tasks initialisation
+//            ConverterTasks.initialise(target, pathways);
+//            //Tests initialisation
+//            QATests.initialise(version);
+//            //Conversion
+//            Converter.run(pathways, dba, output);
+//        } else {
+//            System.err.println("No targets found. Please check the parameters.");
+//        }
+        
+        PathwayDiagramInstanceConverter converter = new PathwayDiagramInstanceConverter(dba);
+        converter.setOutputDir(output);
+        converter.convert();
 
         System.exit(0);
     }

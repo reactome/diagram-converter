@@ -1,19 +1,46 @@
 package org.reactome.server.diagram.converter.layout;
 
+import java.lang.reflect.InvocationTargetException;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.gk.model.GKInstance;
 import org.gk.model.ReactomeJavaConstants;
-import org.reactome.server.diagram.converter.layout.input.model.*;
+import org.reactome.server.diagram.converter.layout.input.model.Edges;
+import org.reactome.server.diagram.converter.layout.input.model.Nodes;
+import org.reactome.server.diagram.converter.layout.input.model.OrgGkRenderEntitySetAndEntitySetLink;
+import org.reactome.server.diagram.converter.layout.input.model.OrgGkRenderEntitySetAndMemberLink;
+import org.reactome.server.diagram.converter.layout.input.model.OrgGkRenderFlowLine;
+import org.reactome.server.diagram.converter.layout.input.model.OrgGkRenderNote;
+import org.reactome.server.diagram.converter.layout.input.model.OrgGkRenderRenderableCompartment;
+import org.reactome.server.diagram.converter.layout.input.model.OrgGkRenderRenderableInteraction;
+import org.reactome.server.diagram.converter.layout.input.model.OrgGkRenderRenderableReaction;
 import org.reactome.server.diagram.converter.layout.input.model.Process;
-import org.reactome.server.diagram.converter.layout.output.*;
-import org.reactome.server.diagram.converter.qa.diagram.*;
+import org.reactome.server.diagram.converter.layout.output.Compartment;
+import org.reactome.server.diagram.converter.layout.output.Diagram;
+import org.reactome.server.diagram.converter.layout.output.DiagramObject;
+import org.reactome.server.diagram.converter.layout.output.Edge;
+import org.reactome.server.diagram.converter.layout.output.EdgeCommon;
+import org.reactome.server.diagram.converter.layout.output.Link;
+import org.reactome.server.diagram.converter.layout.output.Node;
+import org.reactome.server.diagram.converter.layout.output.NodeCommon;
+import org.reactome.server.diagram.converter.layout.output.Note;
+import org.reactome.server.diagram.converter.layout.output.ReactionPart;
+import org.reactome.server.diagram.converter.qa.diagram.T102_MissingSchemaClass;
+import org.reactome.server.diagram.converter.qa.diagram.T104_DuplicatedReactionParticipants;
+import org.reactome.server.diagram.converter.qa.diagram.T105_RenderableClassMismatch;
+import org.reactome.server.diagram.converter.qa.diagram.T106_SchemaClassMismatch;
+import org.reactome.server.diagram.converter.qa.diagram.T111_UnrecognisedRenderableClass;
 import org.reactome.server.diagram.converter.utils.reports.Participant;
 import org.reactome.server.diagram.converter.utils.reports.TestReportsHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.lang.reflect.InvocationTargetException;
-import java.math.BigInteger;
-import java.util.*;
 
 /**
  * @author Kostas Sidiropoulos <ksidiro@ebi.ac.uk>
@@ -24,17 +51,21 @@ public abstract class LayoutFactory {
     private static final String SEPARATOR = ",";
     private static Logger logger = LoggerFactory.getLogger("converter");
     private static Diagram outputDiagram = null;
-
-    public static Diagram getDiagramFromProcess(Process inputProcess, GKInstance pathway, String stId) {
+    
+    public static Diagram getDiagramFromProcess(Process inputProcess, 
+                                                Long pathwayDbId,
+                                                String pathwayName, 
+                                                String stId,
+                                                String speciesName) {
 
         if (inputProcess != null) {
             outputDiagram = new Diagram();
 
             //Parse General fields
-            outputDiagram.setDbId(pathway.getDBID());
+            outputDiagram.setDbId(pathwayDbId);
             outputDiagram.setStableId(stId);
-            outputDiagram.setDisplayName(pathway.getDisplayName());
-            outputDiagram.setSpeciesName(getSpeciesName(pathway));
+            outputDiagram.setDisplayName(pathwayName);
+            outputDiagram.setSpeciesName(speciesName);
 
             outputDiagram.setIsDisease(inputProcess.isIsDisease());
             outputDiagram.setForNormalDraw(inputProcess.isForNormalDraw());
@@ -102,6 +133,10 @@ public abstract class LayoutFactory {
 
         }
         return outputDiagram;
+    }
+
+    public static Diagram getDiagramFromProcess(Process inputProcess, GKInstance pathway, String stId) {
+        return getDiagramFromProcess(inputProcess, pathway.getDBID(), pathway.getDisplayName(), stId, getSpeciesName(pathway));
     }
 
     private static List<NodeCommon> extractNodesList(Nodes inputNodes) {
