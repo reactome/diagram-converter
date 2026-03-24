@@ -5,7 +5,7 @@
 
     <groupId>org.reactome.server.diagram</groupId>
     <artifactId>diagram-converter</artifactId>
-    <version>3.0.8.CT</version>
+    <version>3.0.9.CT</version>
     <packaging>jar</packaging>
 
 	<name>Diagram Converter</name>

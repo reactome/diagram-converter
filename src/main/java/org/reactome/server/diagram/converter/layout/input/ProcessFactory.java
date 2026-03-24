@@ -44,11 +44,12 @@ public class ProcessFactory {
         try {
             process = deserializeXML(xmlContent);
 
-            //Check for events during deserialization
+            // Check for events during deserialization
             if (!xmlValidationEventHandler.getEvents().isEmpty()) {
+                String processName = safeProcessName(process);
                 logger.error(
                         "[{}] Error(s) in XML deserialisation of [{}]: ",
-                        stId, process.getProperties().getIsChangedOrDisplayName().get(0)
+                        stId, processName
                 );
                 logger.error(" >> {} <<", xmlValidationEventHandler.getEvents());
             }
@@ -56,6 +57,16 @@ public class ProcessFactory {
             logger.error("Error creating Process:", e);
         }
         return process;
+    }
+
+    private String safeProcessName(Process process) {
+        if (process == null) return "unknown-process";
+        if (process.getProperties() == null) return "unknown-process";
+        if (process.getProperties().getIsChangedOrDisplayName() == null) return "unknown-process";
+        if (process.getProperties().getIsChangedOrDisplayName().isEmpty()) return "unknown-process";
+
+        Object first = process.getProperties().getIsChangedOrDisplayName().get(0);
+        return first == null ? "unknown-process" : String.valueOf(first);
     }
 
     private Process deserializeXML(String inputXMLString) throws JAXBException {
