@@ -41,6 +41,10 @@ public class DiagramGraphFactory {
         }
     }
     
+    public DiagramGraphFactory(AdvancedDatabaseObjectService aos) {
+        this.aos = aos;
+    }
+    
     public AdvancedDatabaseObjectService getAos() {
         return aos;
     }
