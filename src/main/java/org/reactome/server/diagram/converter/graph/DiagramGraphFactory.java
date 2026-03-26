@@ -105,6 +105,7 @@ public class DiagramGraphFactory {
                 "OPTIONAL MATCH (parent:PhysicalEntity)-[:hasComponent|hasMember|hasCandidate|repeatedUnit|proteinMarker|RNAMarker]->(pe) " +
                 "WHERE parent IN pes " +
                 "OPTIONAL MATCH (pe)-[:referenceEntity]->(re:ReferenceEntity) " +
+                "OPTIONAL MATCH (re)-[:crossReference]->(chebi:DatabaseIdentifier {databaseName:'ChEBI'})" +
                 "OPTIONAL MATCH (pe)-[:species]->(s:Species) " +
                 "RETURN pe.dbId AS dbId, pe.stId AS stId, pe.displayName AS displayName, pe.schemaClass AS schemaClass, " +
                 "       pe.referenceType AS referenceType, s.dbId AS speciesID, " +
@@ -112,6 +113,7 @@ public class DiagramGraphFactory {
                 "       collect(DISTINCT parent.dbId) AS parents, " +
                 "       CASE WHEN re.variantIdentifier IS NULL THEN re.identifier ELSE re.variantIdentifier END AS identifier, " +
                 "       re.stId as standardIdentifier, " +
+                "       'chebi:' + chebi.identifier as chebiIdentifier," +
                 "       re.geneName AS geneNames";
 
         parametersMap.put("dbId", diagram.getDbId());
