@@ -1,16 +1,18 @@
 package org.reactome.server.diagram.converter.layout.input;
 
+import java.io.StringReader;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.validation.Schema;
+
 import org.reactome.server.diagram.converter.layout.input.model.Process;
 import org.reactome.server.diagram.converter.layout.input.xml.SchemaProvider;
 import org.reactome.server.diagram.converter.layout.input.xml.XMLValidationEventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import java.io.StringReader;
 
 /**
  * This class is responsible for deserializing the diagram from its XML
@@ -30,7 +32,9 @@ public class ProcessFactory {
             xmlValidationEventHandler = new XMLValidationEventHandler();
             JAXBContext jaxbContext = JAXBContext.newInstance(Process.class);
             jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            jaxbUnmarshaller.setSchema(SchemaProvider.getSchema(schemaLocation));
+            Schema schema = SchemaProvider.getSchema(schemaLocation);
+            if (schema != null) 
+                jaxbUnmarshaller.setSchema(SchemaProvider.getSchema(schemaLocation));
             jaxbUnmarshaller.setEventHandler(xmlValidationEventHandler);
         } catch (JAXBException e) {
             logger.error("Error instantiating ProcessFactory:", e);
