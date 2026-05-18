@@ -62,8 +62,8 @@ public class PathwayDiagramInstanceConverter {
             xmlGenerator.setTightNodes(false);
             DiagramGKBReader diagramReader = new DiagramGKBReader();
             for (GKInstance diagramInstance : pathwayDiagrams) {
-                if (!diagramInstance.getDBID().equals(507988L))
-                    continue;
+//                if (!diagramInstance.getDBID().equals(9979931L))
+//                    continue;
                 logger.info("Processing PathwayDiagram instance DBID: " + diagramInstance.getDBID());
                 // Skip it if no representedPathway
                 GKInstance representedPathway = (GKInstance) diagramInstance.getAttributeValue(ReactomeJavaConstants.representedPathway);

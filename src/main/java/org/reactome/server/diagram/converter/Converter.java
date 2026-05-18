@@ -54,9 +54,9 @@ class Converter {
         long start = System.currentTimeMillis();
         ConverterTasks.runInitialTasks();
         int i = 0; int tot = pathways.size();
-        int version = ReactomeGraphCore.getService(GeneralService.class).getDBInfo().getVersion();
-
-        System.out.printf("\r· Diagram converter for version %d started:\n\t> Targeting %s pathways.\n%n", version, numberFormat.format(tot));
+//        int version = ReactomeGraphCore.getService(GeneralService.class).getDBInfo().getVersion();
+//
+//        System.out.printf("\r· Diagram converter for version %d started:\n\t> Targeting %s pathways.\n%n", version, numberFormat.format(tot));
         for (SimpleDatabaseObject pathway : pathways) {
             ProgressBar.updateProgressBar(pathway.getStId(), i++, tot);
             try {

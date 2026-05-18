@@ -423,10 +423,10 @@ public class Diagram {
             yy.add(link.minY);
             yy.add(link.maxY);
         }
-        this.minX = Collections.min(xx);
-        this.maxX = Collections.max(xx);
-        this.minY = Collections.min(yy);
-        this.maxY = Collections.max(yy);
+        this.minX = xx.size() > 0 ? Collections.min(xx) : 0;
+        this.maxX = xx.size() > 0 ? Collections.max(xx) : 0;
+        this.minY = yy.size() > 0 ? Collections.min(yy) : 0;
+        this.maxY = yy.size() > 0 ? Collections.max(yy) : 0;
 
         // Detect negative coordinates and print a warning message
         if (this.minX != 0 || this.minY != 0) {

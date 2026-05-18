@@ -5,7 +5,7 @@
 
     <groupId>org.reactome.server.diagram</groupId>
     <artifactId>diagram-converter</artifactId>
-    <version>3.0.9.CT</version>
+    <version>3.0.10.CT</version>
     <packaging>jar</packaging>
 
 	<name>Diagram Converter</name>
@@ -43,6 +43,7 @@
 		<dependency>
 			<groupId>org.reactome.server.graph</groupId>
 			<artifactId>graph-core</artifactId>
+			<version>3.0.0.CT</version>
 		</dependency>
 
 		<!--Reactome-base for MYSQL Adapter-->
