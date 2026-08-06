@@ -119,7 +119,7 @@ public class DiagramGraphFactory {
         //language=Cypher
         query = "" +
                 "MATCH path=(p:Pathway{dbId:$dbId})-[:hasEvent*]->(rle:ReactionLikeEvent) " +
-                "WHERE single(x IN nodes(path) WHERE (x:Pathway) AND x.hasDiagram) " +
+                "WHERE single(x IN nodes(path) WHERE (x:Pathway) AND (x)<-[:representedPathway]-(:PathwayDiagram)) " +
                 "MATCH (rle)-" +
                 "[:input|output|catalystActivity|physicalEntity|entityFunctionalStatus|diseaseEntity|" +
                 "regulatedBy|regulator|hasComponent|hasMember|hasCandidate|repeatedUnit|proteinMarker|RNAMarker*]" +
@@ -159,7 +159,7 @@ public class DiagramGraphFactory {
         //language=Cypher
         String query = "" +
                 "MATCH path=(p:Pathway{dbId:$dbId})-[:hasEvent*]->(:ReactionLikeEvent) " +
-                "WHERE SINGLE(x IN NODES(path) WHERE (x:Pathway) AND x.hasDiagram) " +
+                "WHERE SINGLE(x IN NODES(path) WHERE (x:Pathway) AND (x)<-[:representedPathway]-(:PathwayDiagram)) " +
                 "WITH DISTINCT p, LAST(NODES(path)) AS rle " +
                 "OPTIONAL MATCH (rle)-[:input]->(i:PhysicalEntity) " +
                 "OPTIONAL MATCH (rle)-[:output]->(o:PhysicalEntity) " +
@@ -167,9 +167,9 @@ public class DiagramGraphFactory {
                 "OPTIONAL MATCH (rle)-[:entityFunctionalStatus|diseaseEntity*]->(e:PhysicalEntity) " +
                 "OPTIONAL MATCH (rle)-[:regulatedBy]->(reg:Regulation)-[:regulator]->(r:PhysicalEntity) " +
                 "OPTIONAL MATCH prep=(p)-[:hasEvent*]->(pre:ReactionLikeEvent)<-[:precedingEvent]-(rle) " +
-                "WHERE SINGLE(x IN NODES(prep) WHERE (x:Pathway) AND x.hasDiagram) " +
+                "WHERE SINGLE(x IN NODES(prep) WHERE (x:Pathway) AND (x)<-[:representedPathway]-(:PathwayDiagram)) " +
                 "OPTIONAL MATCH folp=(p)-[:hasEvent*]->(fol:ReactionLikeEvent)-[:precedingEvent]->(rle) " +
-                "WHERE SINGLE(x IN NODES(folp) WHERE (x:Pathway) AND x.hasDiagram) " +
+                "WHERE SINGLE(x IN NODES(folp) WHERE (x:Pathway) AND (x)<-[:representedPathway]-(:PathwayDiagram)) " +
                 "RETURN  rle.dbId AS dbId, rle.stId as stId, rle.displayName AS displayName, rle.schemaClass AS schemaClass, " +
                 "        COLLECT(DISTINCT i.dbId) AS inputs, " +
                 "        COLLECT(DISTINCT o.dbId) AS outputs, " +
@@ -196,10 +196,10 @@ public class DiagramGraphFactory {
 
         String query = "" +
                 "MATCH path=(p:Pathway{dbId:$dbId})-[:hasEvent*]->(s:Event) " +
-                "WHERE NONE(x IN NODES(path) WHERE (x:ReactionLikeEvent)) AND NONE(x IN TAIL(NODES(path)) WHERE x.hasDiagram) " +
+                "WHERE NONE(x IN NODES(path) WHERE (x:ReactionLikeEvent)) AND NONE(x IN TAIL(NODES(path)) WHERE (x)<-[:representedPathway]-(:PathwayDiagram)) " +
                 "WITH DISTINCT s, SIZE(TAIL(NODES(path))) AS level " +
                 "MATCH path=(s)-[:hasEvent*]->(rle:ReactionLikeEvent) " +
-                "WHERE NONE(x IN NODES(path) WHERE (x:Pathway) AND x.hasDiagram) " +
+                "WHERE NONE(x IN NODES(path) WHERE (x:Pathway) AND (x)<-[:representedPathway]-(:PathwayDiagram)) " +
                 "RETURN DISTINCT s.dbId AS dbId," +
                 "                s.stId AS stId, " +
                 "                s.displayName AS displayName, " +
@@ -220,8 +220,9 @@ public class DiagramGraphFactory {
 
     private Collection<Long> getProcessNodes(Long dbId) {
         String query = "" +
-                "MATCH path=(p:Pathway{dbId:$dbId})-[:hasEvent*]->(sp:Pathway{hasDiagram:True}) " +
-                "WHERE SINGLE(x IN TAIL(NODES(path)) WHERE NOT x.hasDiagram IS NULL AND x.hasDiagram) " +
+                "MATCH path=(p:Pathway{dbId:$dbId})-[:hasEvent*]->(sp:Pathway) " +
+                "WHERE (sp)<-[:representedPathway]-(:PathwayDiagram) " +
+                "AND SINGLE(x IN TAIL(NODES(path)) WHERE (x)<-[:representedPathway]-(:PathwayDiagram)) " +
                 "RETURN DISTINCT sp.dbId";
         Map<String, Object> params = new HashMap<>();
         params.put("dbId", dbId);
@@ -235,7 +236,7 @@ public class DiagramGraphFactory {
     private Collection<Long> getStructuresDrug(Long dbId) {
         String query = "" +
                 "MATCH path=(p:Pathway{dbId:$dbId})-[:hasEvent*]->(rle:ReactionLikeEvent) " +
-                "WHERE SINGLE(x IN NODES(path) WHERE NOT x.hasDiagram IS NULL AND x.hasDiagram) " +
+                "WHERE SINGLE(x IN NODES(path) WHERE (x)<-[:representedPathway]-(:PathwayDiagram)) " +
                 "WITH DISTINCT rle " +
                 "MATCH (rle)-[:input|output|catalystActivity|physicalEntity|regulatedBy|regulator*]->(pe:PhysicalEntity)" +
                 "-[:hasComponent|hasMember|hasCandidate|proteinMarker|RNAMarker*]->(p:Drug) " +
