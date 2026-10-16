@@ -62,11 +62,11 @@ pipeline{
 							"""
 							// Create archive that will be stored on S3.
 							sh "tar -zcf diagrams.tgz ${env.OUTPUT_FOLDER}/"
-							// Restart tomcat9 and neo4j services after updates were made to graph db.
-							sh "sudo service tomcat9 stop"
+							// Restart tomcat and neo4j services after updates were made to graph db.
+							sh "sudo service tomcat stop"
 							sh "sudo service neo4j stop"
 							sh "sudo service neo4j start"
-							sh "sudo service tomcat9 start"
+							sh "sudo service tomcat start"
 						}
 					}
 				}
